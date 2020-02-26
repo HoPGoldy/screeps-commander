@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-import Command from './components/Command.vue'
-import Console from './components/Console.vue'
+import Command from '../components/Command.vue'
+import Console from '../components/Console.vue'
 
 Vue.use(VueRouter)
 
