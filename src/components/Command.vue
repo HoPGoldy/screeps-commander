@@ -5,15 +5,16 @@
 <template lang="pug">
 .command-container
     template(v-for="i in 6")
-        .ma-4
-            v-btn(block height="52px") 命令按钮
+        CommandItem
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
+import CommandItem from './CommandItem.vue'
 
 export default Vue.extend({
     name: 'Command',
+    components: { CommandItem },
 
     data: () => ({
 
