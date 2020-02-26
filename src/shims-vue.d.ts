@@ -10,3 +10,8 @@ type Servers = 'screeps'
 type IServerList = {
     [server in Servers]: string
 }
+
+interface IConsoleItem {
+    content: string,
+    icon: string
+}

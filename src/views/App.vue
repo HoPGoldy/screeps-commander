@@ -1,6 +1,4 @@
 <style lang="stylus" scoped>
-.v-btn--fab.v-btn--fixed
-    z-index 6
 .input-box
     background-color white
 </style>
@@ -29,26 +27,16 @@ v-app
                 v-list-item-content
                     v-list-item-title {{ item.title }}
 
-    //- 正文区域
-    v-content
-        v-fab-transition
-            v-btn.fab-btn(v-show="activeTab === 'command'" color='pink' transition="scroll-y-transition" dark fixed bottom right fab)
-                v-icon mdi-plus
-        v-fab-transition
-            v-btn.fab-btn(v-show="activeTab === 'console'" @click="showInputBox = !showInputBox" color='pink' transition="scroll-y-transition" dark fixed bottom right fab)
-                v-icon mdi-code-braces
-        keep-alive
-            router-view
-
     //- 底部导航栏
     v-bottom-navigation(v-model="activeTab" color="indigo" shift app)
-        v-btn(v-for="item in navBtns" :value="item.value")
+        v-btn(v-for="item, index in navBtns" :value="item.value" :key="index")
             span {{item.label}}
             v-icon {{item.icon}}
 
-    //- 底部弹出的命令输入框
-    v-bottom-sheet(v-model='showInputBox')
-        v-text-field.pa-2(v-model="inputCommand" outlined label="键入命令" append-icon="mdi-chevron-double-right" @click:append="sendCommand" solo hide-details clearable)
+    //- 正文区域
+    v-content(app)
+        keep-alive
+            router-view
 </template>
 
 <script lang="ts">
@@ -85,12 +73,6 @@ export default class App extends Vue {
         }
     ]
 
-    // 是否显示 console 的底部输入框
-    showInputBox = false
-
-    // 用户手动输入的命令
-    inputCommand = ''
-
     get activeTab(): string {
         return this.tab
     }
@@ -98,11 +80,6 @@ export default class App extends Vue {
     set activeTab(newData: string) {
         this.$router.push(newData)
         this.tab = newData
-    }
-
-    sendCommand() {
-        console.log(this.inputCommand)
-        this.showInputBox = !this.showInputBox
     }
 }
 </script>

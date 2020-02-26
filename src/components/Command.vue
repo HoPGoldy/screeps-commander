@@ -6,6 +6,9 @@
 .command-container
     template(v-for="i in 6")
         CommandItem
+    v-fab-transition
+        v-btn.fab-btn(color='pink' transition="scroll-y-transition" dark fixed bottom right fab)
+            v-icon mdi-plus
 </template>
 
 <script lang="ts">
