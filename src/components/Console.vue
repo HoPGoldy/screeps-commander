@@ -9,14 +9,15 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import Component from 'vue-class-component'
 import ConsoleItem from './ConsoleItem.vue'
 
-export default Vue.extend({
-    name: 'Console',
-    components: { ConsoleItem },
-
-    data: () => ({
-
-    })
+@Component({
+    components: {
+        ConsoleItem
+    }
 })
+export default class Console extends Vue {
+
+}
 </script>

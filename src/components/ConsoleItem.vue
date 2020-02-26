@@ -24,14 +24,13 @@ v-skeleton-loader(:loading="loading" transition="scale-transition" type="list-it
 
 <script lang="ts">
 import Vue from 'vue'
+import Component from 'vue-class-component'
 
-export default Vue.extend({
-    name: 'ConsoleItem',
-
-    data: () => ({
-        // 是否正在等待 screeps 服务器响应
-        loading: false,
-        message: `template
+@Component
+export default class ConsoleItem extends Vue {
+    // 是否正在等待 screeps 服务器响应
+    loading = false
+    message = `template
     v-row(align='center')
         v-col.text-center(cols='12', sm='4')
             .my-2
@@ -60,7 +59,6 @@ export default Vue.extend({
                 v-btn(large='', color='error') Error
             .my-2
                 v-btn(large='', disabled='') Disabled
-`
-    })
-})
+    `
+}
 </script>

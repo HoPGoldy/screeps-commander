@@ -10,17 +10,13 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import Component from 'vue-class-component'
 import CommandItem from './CommandItem.vue'
 
-export default Vue.extend({
-    name: 'Command',
-    components: { CommandItem },
-
-    data: () => ({
-
-    }),
-    mounted() {
-        console.log(this.$vuetify)
-    }
+@Component({
+    components: { CommandItem }
 })
+export default class Command extends Vue {
+
+}
 </script>

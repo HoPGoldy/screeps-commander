@@ -9,18 +9,13 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import Component from 'vue-class-component'
+// import { $post } from '../plugins/axios'
 
-export default Vue.extend({
-    name: 'CommandItem',
-
-    data: () => ({
-
-    }),
-
-    methods: {
-        exec() {
-            console.log('123321')
-        }
+@Component
+export default class CommandItem extends Vue {
+    exec() {
+        console.log(123)
     }
-})
+}
 </script>

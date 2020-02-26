@@ -48,30 +48,25 @@ v-app
 
 <script lang="ts">
 import Vue from 'vue'
+import Component from 'vue-class-component'
+
 import Command from '../components/Command.vue'
 import Console from '../components/Console.vue'
 
-export default Vue.extend({
-    name: 'App',
-    components: { Command, Console },
-
-    data: () => ({
-        drawer: null,
-        activeTab: null,
-        items: [
-            { title: '更新 token', icon: 'mdi-alpha-t-box' },
-            { title: '导出配置项', icon: 'mdi-download-multiple' },
-            { title: '导入配置项', icon: 'mdi-upload-multiple' },
-            { title: '关于', icon: 'mdi-help-box' }
-        ],
-        right: null
-    }),
-
-    watch: {
-        bottomNav: function(newData) {
-            console.log('TCL: newData', newData)
-            this.$router.push(newData)
-        }
-    }
+@Component({
+    components: { Command, Console }
 })
+export default class App extends Vue {
+    // 左侧抽屉是否显示
+    drawer = false
+    // 当前显示的标签页
+    activeTab = ''
+    // 左侧抽屉显示项目
+    items = [
+        { title: '更新 token', icon: 'mdi-alpha-t-box' },
+        { title: '导出配置项', icon: 'mdi-download-multiple' },
+        { title: '导入配置项', icon: 'mdi-upload-multiple' },
+        { title: '关于', icon: 'mdi-help-box' }
+    ]
+}
 </script>

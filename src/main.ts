@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import './plugins/axios'
+import './plugins/axios.ts'
 import App from './views/App.vue'
 import router from './router'
 import vuetify from './plugins/vuetify'
