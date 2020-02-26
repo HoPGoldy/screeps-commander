@@ -6,7 +6,7 @@
 v-app
     //- 顶部导航栏
     div
-        v-app-bar(color='blue accent-3' dark flat app)
+        v-app-bar(color='blue accent-3' dark app)
             v-app-bar-nav-icon(@click.stop="drawer = !drawer")
             v-toolbar-title Screeps Commander
 
