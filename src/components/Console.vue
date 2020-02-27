@@ -2,80 +2,126 @@
 .input-box
     position fixed
     background-color white
-    width 100%
-    bottom 56px
+    width calc(100% - 98px)
+    bottom 4px
+.fill-block
+    height 100px
 </style>
 
 <template lang="pug">
 v-list(flat)
-    v-list-item-group(v-model='item', color='primary')
-        .item(v-for='(item, i) in items', :key='i')
+    v-list-item-group(color='primary')
+        .item(v-for='(item, i) in messageList', :key='i')
             ConsoleItem(:content="item.content" :icon="item.icon")
+    .fill-block(ref="itemList")
+
+    v-text-field.input-box.ma-4.mr-8(v-model="inputCommand" @keyup.enter="sendCommand" rounded label="键入命令" solo hide-details clearable)
 
     v-fab-transition
-        v-btn.fab-btn(@click="showInputBox = !showInputBox" color='pink' transition="scroll-y-transition" dark fixed bottom right fab)
+        v-btn.fab-btn(v-show="inputCommand && inputCommand.length > 0" @click="sendCommand" color='green' dark fixed bottom right fab)
+            v-icon mdi-arrow-right-thick
+    v-fab-transition
+        v-btn.fab-btn(v-show="!inputCommand || inputCommand.length <= 0" @click="showCommandList = !showCommandList" color='pink' dark fixed bottom right fab)
             v-icon mdi-code-braces
 
     //- 底部弹出的命令输入框
-    v-bottom-sheet(v-model='showInputBox')
-        v-text-field.pa-2(v-model="inputCommand" autofocus outlined label="键入命令" append-icon="mdi-chevron-double-right" @click:append="sendCommand" solo hide-details clearable)
+    v-bottom-sheet(v-model='showCommandList')
+        Command(@select="getCommand")
+    //-     v-text-field.pa-2(v-model="inputCommand" autofocus outlined label="键入命令" append-icon="mdi-chevron-double-right" @click:append="sendCommand" solo hide-details clearable)
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import { Component, Mixins } from 'vue-property-decorator'
+import ScreepsApi from '../plugins/screepsApi'
+
 import ConsoleItem from './ConsoleItem.vue'
-import { Component } from 'vue-property-decorator'
+import Command from './Command.vue'
 
 @Component({
-    components: {
-        ConsoleItem
-    }
+    components: { ConsoleItem, Command }
 })
-export default class Console extends Vue {
-    item = 1
+export default class Console extends Mixins(ScreepsApi) {
+    // 所有信息的保存队列
+    messageList: IConsoleItem[] = []
 
-    items: IConsoleItem[] = []
-    // websock = new WebSocket('wss://screeps.com/socket/132/xiskdoqb/websocket')
-
-    // 是否显示 console 的底部输入框
-    showInputBox = false
+    // 是否显示底部的命令选择框
+    showCommandList = false
 
     // 用户手动输入的命令
     inputCommand = ''
 
-    sendCommand() {
-        console.log(this.inputCommand)
-        this.showInputBox = !this.showInputBox
+    // screeps 的 ws 实例
+    screepsWebSock!: WebSocket
 
-        this.items.push({
+    /**
+     * 向服务器发送命令
+     */
+    sendCommand() {
+        if (!this.inputCommand || this.inputCommand.length <= 0) return
+        console.log(this.inputCommand)
+
+        this.sendConsoleExpression(this.inputCommand, 'shard3')
+
+        // 显示该信息
+        this.messageList.push({
             content: this.inputCommand,
             icon: 'mdi-arrow-top-left'
         })
 
         this.inputCommand = ''
+
+        // 向下滚动
+        this.$vuetify.goTo(this.$refs.itemList as HTMLElement, { duration: 1000 })
     }
 
-    websocketonmessage(e: MessageEvent) {
-        console.log('收到消息！', e.data)
+    /**
+     * 回调 - 用户从命令列表中选择了一个命令
+     */
+    getCommand(cmd: string) {
+        console.log('console', cmd)
+        this.showCommandList = false
     }
 
-    websocketonopen(e: Event) {
-        console.log('开启会话！', e)
-    }
+    /**
+     * 回调 - ws 服务端发送数据
+     *
+     * @param e 接受到的信息对象
+     */
+    onMessage(e: MessageEvent) {
+        // 具有实际载荷的消息才会被解析
+        if (e.data[0] !== 'a') return
 
-    websocketonerror(e: Event) {
-        console.log('收到错误！', e)
-    }
+        try {
+            // 后面写死的 [0] 是因为控制台日志都报错在该条目里
+            const dataStr = JSON.parse(e.data.substring(1))[0]
+            // 后面写死的 [1] 是因为第一个元素是用户的 id，第二个元素包含的是控制台的实际输出
+            const data: ScreepsConsoleMessage = JSON.parse(dataStr)[1]
+            const logs = data.messages.results
 
-    websocketclose(e: CloseEvent) {
-        console.log('会话关闭！', e)
+            // 由于 screeps ws 每 tick 都会返回一条信息，所以会包含大量的如下空数据，这里将其剔除不显示
+            if (logs.length <= 0) return
+
+            // 显示消息
+            this.messageList.push({
+                content: logs.join('|||'),
+                icon: 'mdi-arrow-bottom-right'
+            })
+        }
+        catch (error) {
+            console.log('onMessage 数据解析出错', error, e)
+        }
     }
 
     mounted() {
-        // this.websock.onmessage = this.websocketonmessage
-        // this.websock.onopen = this.websocketonopen
-        // this.websock.onerror = this.websocketonerror
-        // this.websock.onclose = this.websocketclose
+        // 初始化 screeps 所有后端设置
+        // 初始完成后设置接受数据回调
+        // this.initScreepsApi().then(ws => {
+        //     ws.onmessage = this.onMessage
+        // })
+    }
+
+    destroyed() {
+        this.closeWebSocket()
     }
 }
 </script>

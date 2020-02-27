@@ -9,13 +9,13 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import Component from 'vue-class-component'
-// import { $post } from '../plugins/axios'
+import { Component, Emit } from 'vue-property-decorator'
 
 @Component
 export default class CommandItem extends Vue {
+    @Emit('send')
     exec() {
-        console.log(123)
+        return 'resource'
     }
 }
 </script>

@@ -7,7 +7,7 @@ import Console from '../components/Console.vue'
 Vue.use(VueRouter)
 
 const routes = [
-    { path: '/', redirect: '/command' },
+    { path: '/', redirect: '/console' },
     { path: '/command', component: Command },
     { path: '/console', component: Console }
 ]

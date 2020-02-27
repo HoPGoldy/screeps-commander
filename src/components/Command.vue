@@ -5,21 +5,22 @@
 <template lang="pug">
 .command-container
     template(v-for="i in 6")
-        CommandItem
-    v-fab-transition
-        v-btn.fab-btn(color='pink' transition="scroll-y-transition" dark fixed bottom right fab)
-            v-icon mdi-plus
+        CommandItem(@send="sendCommand")
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import Component from 'vue-class-component'
+import { Component, Emit } from 'vue-property-decorator'
 import CommandItem from './CommandItem.vue'
 
 @Component({
     components: { CommandItem }
 })
 export default class Command extends Vue {
-
+    @Emit('select')
+    sendCommand(cmd: string) {
+        console.log(cmd)
+        return cmd
+    }
 }
 </script>

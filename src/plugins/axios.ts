@@ -5,18 +5,19 @@ const servers: IServerList = {
     screeps: 'https://screeps.com'
 }
 
-export const $get = (path: string, params = {}, server: Servers = 'screeps') => {
+axios.interceptors.request.use(axiosConfig => {
+    // axiosConfig.headers['X-Token'] = ''
+
+    return axiosConfig
+})
+
+export const $get = (path: string, params = {}, headers = {}, server: Servers = 'screeps') => {
     const url = /http/.test(path) ? path : servers[server] + path
-    return axios({ url, params, method: 'get' })
+    return axios({ url, params, method: 'get', headers })
 }
 
-export const $post = (path: string, data = {}, server: Servers = 'screeps') => {
+export const $post = (path: string, data = {}, headers = {}, server: Servers = 'screeps') => {
     data = Qs.stringify(data)
     const url = /http/.test(path) ? path : servers[server] + path
-    return axios({ url, data, method: 'post' })
-}
-
-export const $delete = (path: string, data = {}, server: Servers = 'screeps') => {
-    const url = /http/.test(path) ? path : servers[server] + path
-    return axios({ url, data, method: 'delete' })
+    return axios({ url, data, method: 'post', headers })
 }

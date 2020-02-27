@@ -13,7 +13,9 @@ module.exports = {
     },
     rules: {
         'space-before-function-paren': ['off'],
-        indent: ['error', 4],
+        'indent': ['error', 4],
+        'curly': ['off'],
+        'brace-style': ['off'],
         'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
         'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
     }
