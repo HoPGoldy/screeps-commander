@@ -31,13 +31,20 @@ v-app
     v-content(app)
         keep-alive
             router-view
+
+    Boot(:show="showBoot" @on-finish="onBootFinish")
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
+import { LOCAL_STORAGE_NAME } from '../config'
 
-@Component
+import Boot from '../components/Boot.vue'
+
+@Component({
+    components: { Boot }
+})
 export default class App extends Vue {
     // 左侧抽屉显示项目
     items = [
@@ -50,5 +57,21 @@ export default class App extends Vue {
 
     // 是否展示左侧抽屉
     showSideDrawer = false
+
+    // 是否展示初始化引导
+    showBoot = false
+
+    /**
+     * 回调 - 完成初始化工作
+     */
+    onBootFinish(info: PlayerLoginData) {
+        // console.log('引导完成了！', info)
+        this.showBoot = false
+    }
+
+    mounted() {
+        // 如果本地没有数据存储的话就启动初始化引导
+        if (!localStorage[LOCAL_STORAGE_NAME]) this.showBoot = true
+    }
 }
 </script>

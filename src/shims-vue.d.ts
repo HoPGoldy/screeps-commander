@@ -48,3 +48,39 @@ interface ScreepsConsoleMessage {
     // 哪个 shard 的消息
     shard: string
 }
+
+// 本地存储数据结构
+interface LocalDataBase {
+    // 登陆信息
+    loginData: PlayerLoginData
+    // 玩家创建的所有命令
+    commands: ICommand[]
+}
+
+// 保存下来的命令数据
+interface ICommand {
+    // 标题，显示在弹出窗口中
+    title: string
+    // 介绍，现在在标题下方
+    introduce: string
+    // 命令主体
+    body: string
+    // 命令中包含的参数列表
+    param: ICommandParam[]
+}
+
+// 命令参数数据
+interface ICommandParam {
+    // 在填写参数时给出的提示
+    label: string
+    // 占位符，用于在命令主体中进行参数替换
+    match: string
+}
+
+// 用户登陆信息
+interface PlayerLoginData {
+    // 用户名
+    email: string
+    // 密码
+    password: string
+}

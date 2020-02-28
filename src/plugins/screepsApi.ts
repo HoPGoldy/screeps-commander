@@ -86,7 +86,15 @@ export default class ScreepsApi extends Vue {
         })
     }
 
+    /**
+     * 向 screeps 发送命令
+     *
+     * @param cmd 要发送的命令
+     * @param shard 要发送到的 shard
+     */
     sendConsoleExpression(cmd: string, shard: string) {
+        if (!this.playerInfo) return
+
         $post('/api/user/console', {
             expression: cmd,
             shard
@@ -148,8 +156,11 @@ export default class ScreepsApi extends Vue {
         return new Promise((resolve, reject) => {
             $post('/api/auth/signin', { email, password }).then(resp => {
                 if (resp.status === 200 && resp.data.ok === 1) resolve(resp.data.token)
-                else reject(resp.status)
-            })
+                else {
+                    console.log('123', resp)
+                    reject(resp)
+                }
+            }).catch(e => reject(e))
         })
     }
 
