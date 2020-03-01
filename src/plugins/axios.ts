@@ -2,7 +2,7 @@ import axios from 'axios'
 import Qs from 'qs'
 
 const servers: IServerList = {
-    screeps: 'https://screeps.com'
+    screeps: 'https://cors-anywhere.herokuapp.com/https://screeps.com'
 }
 
 axios.interceptors.request.use(axiosConfig => {
