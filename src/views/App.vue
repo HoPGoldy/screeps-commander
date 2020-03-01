@@ -21,7 +21,7 @@ v-app
                     | @hopgoldy
         v-divider
         v-list(dense nav)
-            v-list-item(v-for='item in items' :key='item.title' link)
+            v-list-item(v-for='item in items' :key='item.title' link @click="onClickSidebar(item.comp)")
                 v-list-item-icon
                     v-icon {{ item.icon }}
                 v-list-item-content
@@ -32,6 +32,10 @@ v-app
         keep-alive
             router-view
 
+    //- 左侧列表按钮的弹出框
+    v-dialog(v-model='showSidebar')
+        component(:is="activeSidebar" @on-finish="onSidebarFinish")
+
     Boot(:show="showBoot" @on-finish="onBootFinish")
 </template>
 
@@ -41,22 +45,29 @@ import StorageApi from '../plugins/storageApi'
 import { LOCAL_STORAGE_NAME } from '../config'
 
 import Boot from '../components/Boot.vue'
+import SidebarComp from '../components/sidebarComp'
 
 @Component({
-    components: { Boot }
+    components: { Boot, ...SidebarComp }
 })
 export default class App extends Mixins(StorageApi) {
     // 左侧抽屉显示项目
     items = [
-        { title: '更新身份信息', icon: 'mdi-alpha-t-box' },
-        { title: '设置 shard', icon: 'mdi-alpha-t-box' },
-        { title: '导出配置项', icon: 'mdi-download-multiple' },
-        { title: '导入配置项', icon: 'mdi-upload-multiple' },
-        { title: '关于', icon: 'mdi-help-box' }
+        { title: '更新身份信息', comp: 'login-data-setter', icon: 'mdi-alpha-t-box' },
+        { title: '设置 shard', comp: '', icon: 'mdi-alpha-t-box' },
+        { title: '导出配置项', comp: 'save-config', icon: 'mdi-download-multiple' },
+        { title: '导入配置项', comp: 'load-config', icon: 'mdi-upload-multiple' },
+        { title: '关于', comp: '', icon: 'mdi-help-box' }
     ]
 
     // 是否展示左侧抽屉
     showSideDrawer = false
+
+    // 是否展示侧边栏 dialog
+    showSidebar = false
+
+    // 当前要展示的侧边栏组件名称
+    activeSidebar = 'save-config'
 
     // 是否展示初始化引导
     showBoot = false
@@ -64,9 +75,25 @@ export default class App extends Mixins(StorageApi) {
     /**
      * 回调 - 完成初始化工作
      */
-    onBootFinish(info: PlayerLoginData) {
+    onBootFinish() {
         // console.log('引导完成了！', info)
         this.showBoot = false
+    }
+
+    /**
+     * 回调 - 侧边栏按钮被点击
+     */
+    onClickSidebar(compName: string) {
+        this.showSidebar = true
+        this.showSideDrawer = false
+        this.activeSidebar = compName
+    }
+
+    /**
+     * 回调 - 侧边栏工作完成
+     */
+    onSidebarFinish() {
+        this.showSidebar = false
     }
 
     mounted() {
