@@ -8,7 +8,7 @@ export default class StorageApi extends Vue {
 
     // dataBase 的访问器
     get storage(): LocalDataBase {
-        console.log('get 被访问')
+        // console.log('get 被访问')
         if (!this.dataBase) {
             const localData = localStorage.getItem(LOCAL_STORAGE_NAME)
 
@@ -30,7 +30,7 @@ export default class StorageApi extends Vue {
 
     // dataBase 访问器
     set storage(data: LocalDataBase) {
-        console.log('set 被访问', data)
+        // console.log('set 被访问', data)
         this.dataBase = data
 
         localStorage.setItem(LOCAL_STORAGE_NAME, JSON.stringify(data))
