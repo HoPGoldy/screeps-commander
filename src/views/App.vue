@@ -36,8 +36,8 @@ v-app
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
+import { Component, Mixins } from 'vue-property-decorator'
+import StorageApi from '../plugins/storageApi'
 import { LOCAL_STORAGE_NAME } from '../config'
 
 import Boot from '../components/Boot.vue'
@@ -45,10 +45,10 @@ import Boot from '../components/Boot.vue'
 @Component({
     components: { Boot }
 })
-export default class App extends Vue {
+export default class App extends Mixins(StorageApi) {
     // 左侧抽屉显示项目
     items = [
-        { title: '更新 token', icon: 'mdi-alpha-t-box' },
+        { title: '更新身份信息', icon: 'mdi-alpha-t-box' },
         { title: '设置 shard', icon: 'mdi-alpha-t-box' },
         { title: '导出配置项', icon: 'mdi-download-multiple' },
         { title: '导入配置项', icon: 'mdi-upload-multiple' },

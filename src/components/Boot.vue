@@ -57,11 +57,12 @@ v-overlay(:value='show')
  * 初始化引导弹框
  */
 import ScreepsApi from '../plugins/screepsApi'
+import StorageApi from '../plugins/storageApi'
 import { Component, Prop, Emit, Mixins } from 'vue-property-decorator'
 import { LOCAL_STORAGE_NAME } from '../config'
 
 @Component
-export default class Boot extends Mixins(ScreepsApi) {
+export default class Boot extends Mixins(ScreepsApi, StorageApi) {
     // 当前引导所处的页面位置
     step = 1
 
@@ -97,6 +98,14 @@ export default class Boot extends Mixins(ScreepsApi) {
      */
     @Emit('on-finish')
     finishBoot(): PlayerLoginData {
+        this.storage = {
+            loginData: {
+                email: this.email,
+                password: this.password
+            },
+            commands: []
+        }
+
         return {
             email: this.email,
             password: this.password
