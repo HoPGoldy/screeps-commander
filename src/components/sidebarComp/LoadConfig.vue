@@ -63,6 +63,12 @@ export default class LoadConfig extends Mixins(StorageApi) {
     }
 
     @Emit('on-finish')
-    finish() { }
+    finish(): SidebarEmitEvent {
+        return {
+            show: true,
+            content: '导入成功，刷新页面来应用新配置项',
+            color: 'success'
+        }
+    }
 }
 </script>

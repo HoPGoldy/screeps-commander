@@ -17,6 +17,16 @@ interface ConsoleMessage {
     icon: string
 }
 
+// 侧边栏”完成工作“回调的返回信息
+interface SidebarEmitEvent {
+    // 是否需要显示下述信息
+    show: boolean
+    // 要显示信息弹窗的颜色
+    color?: string
+    // 要显示信息弹窗的内容
+    content?: string
+}
+
 // 玩家信息格式
 interface PlayerInfo {
     // 玩家名称
@@ -51,8 +61,6 @@ interface ScreepsConsoleMessage {
 
 // 本地存储数据结构
 interface LocalDataBase {
-    // 登陆信息
-    loginData: PlayerLoginData
     // 玩家创建的所有命令
     commands: Command[]
     // 控制台命令默认发送到的 shard

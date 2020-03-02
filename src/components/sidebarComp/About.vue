@@ -14,7 +14,7 @@ v-card
                     span  制作并开源。
         v-list-item
             v-list-item-content
-                v-list-item-title 数据保存
+                v-list-item-title 数据
                 .pt-1 本应用所有数据均保存在本地，自动或手动清除浏览器缓存将可能导致数据丢失，请妥善使用导出 / 导入功能。
         v-list-item
             v-list-item-content

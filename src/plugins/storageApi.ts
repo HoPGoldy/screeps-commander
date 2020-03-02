@@ -15,7 +15,6 @@ export default class StorageApi extends Vue {
             // 如果本地没有存储的话就进行初始化工作
             if (!localData) {
                 this.dataBase = {
-                    loginData: { email: '', password: '' },
                     shard: DEFAULT_SHARD_NAME,
                     commands: []
                 }

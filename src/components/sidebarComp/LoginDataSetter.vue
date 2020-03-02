@@ -29,7 +29,7 @@ import ScreepsApi from '../../plugins/screepsApi'
 import StorageApi from '../../plugins/storageApi'
 
 @Component
-export default class LoginDataSetter extends Mixins(ScreepsApi, StorageApi) {
+export default class LoginDataSetter extends Mixins(ScreepsApi) {
     // 登陆用户名及密码
     email = ''
     password = ''
@@ -58,12 +58,6 @@ export default class LoginDataSetter extends Mixins(ScreepsApi, StorageApi) {
             this.message('success', '验证成功')
             this.confirmBtnLoading = false
 
-            // 重设本地存储中的账号密码
-            this.storage.loginData = {
-                email: this.email,
-                password: this.password
-            }
-
             this.finish()
         }).catch(() => {
             this.confirmBtnLoading = false
@@ -79,6 +73,12 @@ export default class LoginDataSetter extends Mixins(ScreepsApi, StorageApi) {
     }
 
     @Emit('on-finish')
-    finish() { }
+    finish(): SidebarEmitEvent {
+        return {
+            show: true,
+            content: '已重设身份信息',
+            color: 'success'
+        }
+    }
 }
 </script>

@@ -14,14 +14,10 @@ v-overlay(:value='show')
             //- 第一屏
             v-window-item(:value='1')
                 .pa-2.pt-0
-                    v-list-item(three-line)
+                    v-list-item(v-for="content in introduceContent")
                         v-list-item-content
-                            v-list-item-title 数据保存
-                            .content 本应用所有数据均保存在本地，自动或手动清除浏览器缓存将可能导致数据丢失，请妥善使用导出 / 导入功能。
-                    v-list-item(two-line)
-                        v-list-item-content
-                            v-list-item-title 开源
-                            .content 本应用代码已开源至 github。更多信息请访问”关于“页。
+                            v-list-item-title {{content.title}}
+                            .content {{content.text}}
             //- 第二屏
             v-window-item(:value='2')
                 v-card-text.pt-0
@@ -36,7 +32,7 @@ v-overlay(:value='show')
                         v-list-item-content
                             .title.mb-4 欢迎回来！
                             .subtitle-1 现在你可以直接与 Screeps 控制台进行交互，所有控制台输出也会直接反馈到本应用中。
-                            .subtitle-1 同时你也可以自定义快捷命令来快速执行某些常用操作。点击左上角按钮来了解更多操作。
+                            .subtitle-1 同时你也可以自定义快捷命令来快速执行某些常用操作。点击左上角菜单来了解更多操作。
         v-divider
         //- 下方前进后退按钮
         v-card-actions
@@ -54,6 +50,7 @@ v-overlay(:value='show')
 <script lang="ts">
 /**
  * 初始化引导弹框
+ * 本组件只会在应用初次加载（未找到本地存储）时调用
  */
 import ScreepsApi from '@/plugins/screepsApi'
 import StorageApi from '@/plugins/storageApi'
@@ -62,6 +59,18 @@ import { Component, Prop, Emit, Mixins } from 'vue-property-decorator'
 
 @Component
 export default class Boot extends Mixins(ScreepsApi, StorageApi) {
+    // 介绍信息
+    introduceContent = [
+        {
+            title: '数据',
+            text: '本应用所有数据均保存在本地，自动或手动清除浏览器缓存将可能导致数据丢失，请妥善使用导出 / 导入功能。'
+        },
+        {
+            title: '开源',
+            text: '本应用代码已开源至 github。更多信息请访问”关于“页。'
+        }
+    ]
+
     // 当前引导所处的页面位置
     step = 1
 
@@ -98,10 +107,6 @@ export default class Boot extends Mixins(ScreepsApi, StorageApi) {
     @Emit('on-finish')
     finishBoot(): PlayerLoginData {
         this.storage = {
-            loginData: {
-                email: this.email,
-                password: this.password
-            },
             shard: DEFAULT_SHARD_NAME,
             commands: []
         }

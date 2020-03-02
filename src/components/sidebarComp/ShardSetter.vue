@@ -44,7 +44,13 @@ export default class ShardSetter extends Mixins(StorageApi) {
     }
 
     @Emit('on-finish')
-    finish() { }
+    finish(): SidebarEmitEvent {
+        return {
+            show: true,
+            content: `已将控制台输出定向到 ${this.shard}`,
+            color: 'success'
+        }
+    }
 
     mounted() {
         this.shard = this.storage.shard

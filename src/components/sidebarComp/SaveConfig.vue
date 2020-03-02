@@ -23,13 +23,21 @@ export default class SaveConfig extends Mixins(StorageApi) {
     copyContent = ''
 
     @Emit('on-finish')
-    onCopy() {
-        return '复制成功'
+    onCopy(): SidebarEmitEvent {
+        return {
+            show: true,
+            content: '已导出到剪切板',
+            color: 'success'
+        }
     }
 
     @Emit('on-finish')
-    onError() {
-        return '复制失败'
+    onError(): SidebarEmitEvent {
+        return {
+            show: true,
+            content: '导出失败，请检查所用的浏览器是否为最新版本',
+            color: 'error'
+        }
     }
 
     mounted() {

@@ -36,6 +36,10 @@ v-app
         component(:is="activeSidebar" @on-finish="onSidebarFinish")
 
     Boot(:show="showBoot" @on-finish="onBootFinish")
+
+    //- 消息弹窗
+    v-snackbar(v-model="showMessage" :color="messageColor") {{messageText}}
+        v-btn(text @click="showMessage = false") 关闭
 </template>
 
 <script lang="ts">
@@ -52,8 +56,8 @@ import SidebarComp from '../components/sidebarComp'
 export default class App extends Mixins(StorageApi) {
     // 左侧抽屉显示项目
     items = [
-        { title: '更新身份信息', comp: 'login-data-setter', icon: 'mdi-alpha-t-box' },
-        { title: '设置 shard', comp: 'shard-setter', icon: 'mdi-alpha-t-box' },
+        { title: '更新身份信息', comp: 'login-data-setter', icon: 'mdi-account-circle' },
+        { title: '设置 shard', comp: 'shard-setter', icon: 'mdi-server' },
         { title: '导出配置项', comp: 'save-config', icon: 'mdi-download-multiple' },
         { title: '导入配置项', comp: 'load-config', icon: 'mdi-upload-multiple' },
         { title: '关于', comp: 'about', icon: 'mdi-help-box' }
@@ -71,11 +75,15 @@ export default class App extends Mixins(StorageApi) {
     // 是否展示初始化引导
     showBoot = false
 
+    // 弹出框的基本信息
+    showMessage = false
+    messageColor = 'success'
+    messageText = ''
+
     /**
      * 回调 - 完成初始化工作
      */
     onBootFinish() {
-        // console.log('引导完成了！', info)
         this.showBoot = false
     }
 
@@ -91,8 +99,19 @@ export default class App extends Mixins(StorageApi) {
     /**
      * 回调 - 侧边栏工作完成
      */
-    onSidebarFinish() {
+    onSidebarFinish(e: SidebarEmitEvent) {
         this.showSidebar = false
+
+        if (!e.show) return
+
+        this.message(e.color || 'success', e.content || '设置成功')
+    }
+
+    // 消息弹窗的封装
+    message(color: string, text: string) {
+        this.messageColor = color
+        this.messageText = text
+        this.showMessage = true
     }
 
     mounted() {
