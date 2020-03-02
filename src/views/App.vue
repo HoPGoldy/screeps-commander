@@ -56,7 +56,7 @@ export default class App extends Mixins(StorageApi) {
         { title: '设置 shard', comp: 'shard-setter', icon: 'mdi-alpha-t-box' },
         { title: '导出配置项', comp: 'save-config', icon: 'mdi-download-multiple' },
         { title: '导入配置项', comp: 'load-config', icon: 'mdi-upload-multiple' },
-        { title: '关于', comp: '', icon: 'mdi-help-box' }
+        { title: '关于', comp: 'about', icon: 'mdi-help-box' }
     ]
 
     // 是否展示左侧抽屉

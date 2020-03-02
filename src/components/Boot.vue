@@ -16,12 +16,12 @@ v-overlay(:value='show')
                 .pa-2.pt-0
                     v-list-item(three-line)
                         v-list-item-content
-                            v-list-item-title 隐私
+                            v-list-item-title 数据保存
                             .content 本应用所有数据均保存在本地，自动或手动清除浏览器缓存将可能导致数据丢失，请妥善使用导出 / 导入功能。
                     v-list-item(two-line)
                         v-list-item-content
                             v-list-item-title 开源
-                            .content 本应用代码已开源至 github。
+                            .content 本应用代码已开源至 github。更多信息请访问”关于“页。
             //- 第二屏
             v-window-item(:value='2')
                 v-card-text.pt-0
