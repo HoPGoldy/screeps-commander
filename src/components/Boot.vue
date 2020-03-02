@@ -28,8 +28,7 @@ v-overlay(:value='show')
                     v-text-field(v-model="email" label='Screeps 登陆邮箱' hide-details)
                     v-text-field.mt-2(v-model="password" label='Screeps 登陆密码' hide-details type="password")
                     .mt-5.caption.grey--text.text--darken-1
-                        | 本应用不会上传您的任何个人信息，所有信息均保存在本地
-
+                        | 本应用不会记录您的任何身份信息，所以在退出应用后将需要重新登录。
             //- 第三屏
             v-window-item(:value='3')
                 .pa-2.pt-0.text-center

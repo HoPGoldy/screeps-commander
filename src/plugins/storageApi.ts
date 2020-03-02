@@ -47,4 +47,24 @@ export default class StorageApi extends Vue {
 
         return (typeof localData === 'string')
     }
+
+    /**
+     * 获取本地保存的原始数据文本
+     *
+     * @returns 字符串类型的原始数据，没有数据的话返回空字符串
+     */
+    getOriginStorage(): string {
+        const localData = localStorage.getItem(LOCAL_STORAGE_NAME)
+
+        return (typeof localData === 'string') ? localData : ''
+    }
+
+    /**
+     * 重设原始数据
+     *
+     * @param dataStr 要替换成的原始数据文本
+     */
+    saveOriginStorage(dataStr: string): void {
+        localStorage.setItem(LOCAL_STORAGE_NAME, dataStr)
+    }
 }

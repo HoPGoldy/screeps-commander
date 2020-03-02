@@ -5,12 +5,12 @@
 <template lang="pug">
 v-card
     v-card-title.title.font-weight-regular.justify-space-between.pb-1
-        span 重设身份信息
+        span 登录 Screeps
     v-card-text.pt-0
         v-text-field(v-model="email" label='Screeps 登陆邮箱' hide-details)
         v-text-field.mt-2(v-model="password" label='Screeps 登陆密码' hide-details type="password")
         .mt-5.caption.grey--text.text--darken-1
-            | 本应用不会上传您的任何个人信息，所有信息均保存在本地
+            | 本应用不会记录您的任何身份信息，所以在退出应用后将需要重新登录。
     v-divider
     //- 下方前进后退按钮
     v-card-actions

@@ -29,8 +29,7 @@ v-app
 
     //- 正文区域
     v-content(app)
-        keep-alive
-            router-view
+        router-view
 
     //- 左侧列表按钮的弹出框
     v-dialog(v-model='showSidebar')
