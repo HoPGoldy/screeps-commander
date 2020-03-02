@@ -1,5 +1,5 @@
 import { Component, Vue } from 'vue-property-decorator'
-import { LOCAL_STORAGE_NAME } from '../config'
+import { LOCAL_STORAGE_NAME, DEFAULT_SHARD_NAME } from '@/config'
 
 @Component
 export default class StorageApi extends Vue {
@@ -16,6 +16,7 @@ export default class StorageApi extends Vue {
             if (!localData) {
                 this.dataBase = {
                     loginData: { email: '', password: '' },
+                    shard: DEFAULT_SHARD_NAME,
                     commands: []
                 }
 

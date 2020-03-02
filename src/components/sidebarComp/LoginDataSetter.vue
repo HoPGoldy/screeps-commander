@@ -54,7 +54,7 @@ export default class LoginDataSetter extends Mixins(ScreepsApi, StorageApi) {
         this.message('info', '正在向 Screeps 服务器验证身份...')
 
         // 发起请求
-        this.getSessionToken(this.email, this.password).then(resp => {
+        this.getSessionToken(this.email, this.password).then(() => {
             this.message('success', '验证成功')
             this.confirmBtnLoading = false
 
@@ -65,7 +65,7 @@ export default class LoginDataSetter extends Mixins(ScreepsApi, StorageApi) {
             }
 
             this.finish()
-        }).catch(e => {
+        }).catch(() => {
             this.confirmBtnLoading = false
             this.message('error', '验证失败，请验证用户名密码是否正确')
         })

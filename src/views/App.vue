@@ -54,7 +54,7 @@ export default class App extends Mixins(StorageApi) {
     // 左侧抽屉显示项目
     items = [
         { title: '更新身份信息', comp: 'login-data-setter', icon: 'mdi-alpha-t-box' },
-        { title: '设置 shard', comp: '', icon: 'mdi-alpha-t-box' },
+        { title: '设置 shard', comp: 'shard-setter', icon: 'mdi-alpha-t-box' },
         { title: '导出配置项', comp: 'save-config', icon: 'mdi-download-multiple' },
         { title: '导入配置项', comp: 'load-config', icon: 'mdi-upload-multiple' },
         { title: '关于', comp: '', icon: 'mdi-help-box' }

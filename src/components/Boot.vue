@@ -56,8 +56,9 @@ v-overlay(:value='show')
 /**
  * 初始化引导弹框
  */
-import ScreepsApi from '../plugins/screepsApi'
-import StorageApi from '../plugins/storageApi'
+import ScreepsApi from '@/plugins/screepsApi'
+import StorageApi from '@/plugins/storageApi'
+import { DEFAULT_SHARD_NAME } from '@/config'
 import { Component, Prop, Emit, Mixins } from 'vue-property-decorator'
 
 @Component
@@ -102,6 +103,7 @@ export default class Boot extends Mixins(ScreepsApi, StorageApi) {
                 email: this.email,
                 password: this.password
             },
+            shard: DEFAULT_SHARD_NAME,
             commands: []
         }
 

@@ -55,6 +55,8 @@ interface LocalDataBase {
     loginData: PlayerLoginData
     // 玩家创建的所有命令
     commands: Command[]
+    // 控制台命令默认发送到的 shard
+    shard: string
 }
 
 // 保存下来的命令数据
