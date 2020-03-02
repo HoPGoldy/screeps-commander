@@ -13,7 +13,7 @@ v-card
     v-divider
     //- 下方前进后退按钮
     v-card-actions
-        v-btn(depressed @click="finish") 取消
+        v-btn(depressed @click="cancel") 取消
         v-spacer
         v-btn(color='primary' depressed @click="confirm") 确认
 </template>
@@ -49,6 +49,13 @@ export default class ShardSetter extends Mixins(StorageApi) {
             show: true,
             content: `已将控制台输出定向到 ${this.shard}`,
             color: 'success'
+        }
+    }
+
+    @Emit('on-finish')
+    cancel(): SidebarEmitEvent {
+        return {
+            show: false
         }
     }
 
