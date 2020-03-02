@@ -1,7 +1,7 @@
 import axios from 'axios'
 import Qs from 'qs'
 
-const servers: IServerList = {
+const servers: ServerList = {
     screeps: 'https://cors-anywhere.herokuapp.com/https://screeps.com'
 }
 

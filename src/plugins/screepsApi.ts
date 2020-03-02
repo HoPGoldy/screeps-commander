@@ -12,7 +12,7 @@ export default class ScreepsApi extends Vue {
     /**
      * 用户信息
      */
-    playerInfo!: IPlayerInfo
+    playerInfo!: PlayerInfo
 
     /**
      * 初始化 Screeps 的 Api 访问
@@ -71,7 +71,7 @@ export default class ScreepsApi extends Vue {
      * @param token 用于获取玩家信息的 SESSION_TOKEN
      * @returns Promise 玩家的用户信息
      */
-    getPlayerInfo(token: string): Promise<IPlayerInfo> {
+    getPlayerInfo(token: string): Promise<PlayerInfo> {
         return new Promise((resolve, reject) => {
             $get('/api/auth/me', {}, { 'X-token': token }).then(resp => {
                 // console.log('TCL: ScreepsApi -> resp', resp)

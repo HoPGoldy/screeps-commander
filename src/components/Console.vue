@@ -42,7 +42,7 @@ import Command from './Command.vue'
 })
 export default class Console extends Mixins(ScreepsApi) {
     // 所有信息的保存队列
-    messageList: IConsoleItem[] = []
+    messageList: ConsoleMessage[] = []
 
     // 是否显示底部的命令选择框
     showCommandList = false

@@ -59,7 +59,6 @@ v-overlay(:value='show')
 import ScreepsApi from '../plugins/screepsApi'
 import StorageApi from '../plugins/storageApi'
 import { Component, Prop, Emit, Mixins } from 'vue-property-decorator'
-import { LOCAL_STORAGE_NAME } from '../config'
 
 @Component
 export default class Boot extends Mixins(ScreepsApi, StorageApi) {
@@ -133,11 +132,11 @@ export default class Boot extends Mixins(ScreepsApi, StorageApi) {
         this.message('info', '正在向 Screeps 服务器验证身份...')
 
         // 发起请求
-        this.getSessionToken(this.email, this.password).then(resp => {
+        this.getSessionToken(this.email, this.password).then(() => {
             this.step++
             this.message('success', '验证成功')
             this.confirmBtnLoading = false
-        }).catch(e => {
+        }).catch(() => {
             this.confirmBtnLoading = false
             this.message('error', '验证失败，请验证用户名密码是否正确')
         })

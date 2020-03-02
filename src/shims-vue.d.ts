@@ -7,18 +7,18 @@ declare module '*.vue' {
 type Servers = 'screeps'
 
 // 接口服务器地址列表
-type IServerList = {
+type ServerList = {
     [server in Servers]: string
 }
 
 // 控制台信息组件所需的数据格式
-interface IConsoleItem {
-    content: string,
+interface ConsoleMessage {
+    content: string
     icon: string
 }
 
 // 玩家信息格式
-interface IPlayerInfo {
+interface PlayerInfo {
     // 玩家名称
     username: string
     // 玩家 id
@@ -41,9 +41,9 @@ interface ScreepsTokenAuthResult {
 interface ScreepsConsoleMessage {
     messages: {
         // 返回回来的都是空的，不知道这是啥
-        log: string[],
+        log: string[];
         // 控制台消息正文
-        results: string[],
+        results: string[];
     }
     // 哪个 shard 的消息
     shard: string
@@ -54,11 +54,11 @@ interface LocalDataBase {
     // 登陆信息
     loginData: PlayerLoginData
     // 玩家创建的所有命令
-    commands: ICommand[]
+    commands: Command[]
 }
 
 // 保存下来的命令数据
-interface ICommand {
+interface Command {
     // 标题，显示在弹出窗口中
     title: string
     // 介绍，现在在标题下方
@@ -66,11 +66,11 @@ interface ICommand {
     // 命令主体
     body: string
     // 命令中包含的参数列表
-    param: ICommandParam[]
+    param: CommandParam[]
 }
 
 // 命令参数数据
-interface ICommandParam {
+interface CommandParam {
     // 在填写参数时给出的提示
     label: string
     // 占位符，用于在命令主体中进行参数替换
