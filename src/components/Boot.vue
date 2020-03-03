@@ -14,7 +14,7 @@ v-overlay(:value='show')
             //- 第一屏
             v-window-item(:value='1')
                 .pa-2.pt-0
-                    v-list-item(v-for="content in introduceContent")
+                    v-list-item(v-for="content, index in introduceContent" :key="index")
                         v-list-item-content
                             v-list-item-title {{content.title}}
                             .content {{content.text}}

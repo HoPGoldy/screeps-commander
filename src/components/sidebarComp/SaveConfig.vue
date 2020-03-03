@@ -5,7 +5,8 @@
 <template lang="pug">
 v-card
     v-card-text.text-center
-        .subtitle-1.py-5 点击下方按钮将导出配置项到剪切板。
+        .subtitle-1.pt-5 点击下方按钮导出配置项到剪切板，或直接手动复制。
+        v-text-field.mb-4(v-model="copyContent" hide-details)
         v-btn(block color="primary" dark
             v-clipboard:copy="copyContent"
             v-clipboard:success="onCopy"
@@ -35,7 +36,7 @@ export default class SaveConfig extends Mixins(StorageApi) {
     onError(): SidebarEmitEvent {
         return {
             show: true,
-            content: '导出失败，请检查所用的浏览器是否为最新版本',
+            content: '异常，可能已经导出完成，请粘贴确认',
             color: 'error'
         }
     }
