@@ -7,6 +7,7 @@
 v-dialog(v-model='show' @click:outside="onClose")
     v-card
         v-card-text.pa-2
+            //- 遍历显示所有帮助信息
             v-list-item(v-for="item, index in info" :key="index")
                 v-list-item-content
                     v-list-item-title.font-weight-bold {{item.title}}

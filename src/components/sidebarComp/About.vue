@@ -1,7 +1,3 @@
-<style lang="stylus" scoped>
-
-</style>
-
 <template lang="pug">
 v-card
     v-card-text.pa-2

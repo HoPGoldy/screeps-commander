@@ -1,7 +1,3 @@
-<style lang="stylus" scoped>
-
-</style>
-
 <template lang="pug">
 v-card
     v-card-title.title.font-weight-regular.justify-space-between.pb-1
@@ -10,26 +6,32 @@ v-card
         v-btn(icon @click="showHelp = true")
             v-icon mdi-help-circle-outline
     v-card-text
+        //- 按钮基本信息
         v-text-field.mb-4(v-model="commandInfo.title" label='名称' hide-details clearable)
         v-text-field.mb-4(v-model="commandInfo.shard" label='目标 shard' hide-details clearable)
         v-text-field.mb-4(v-model="commandInfo.body" label='命令' hide-details clearable)
 
+        //- 按钮参数列表
         .mt-5
             template(v-for="param, index in params")
                 .mb-2.d-flex.justify-space-between
+                    //- 移除参数按钮
                     v-btn.mr-2(color="error" small icon @click="removeParam(index)")
                         v-icon mdi-close-circle
+                    //- 编辑参数按钮，插槽里是参数名和占位符
                     v-btn.flex-grow-1(small @click="editParam(index)")
                         span {{param.label}}
                         v-spacer
                         span {{param.match}}
             v-btn(block small @click="addNewParam") 添加参数
+
     v-divider
     v-card-actions
         v-btn(depressed width="100" @click="showCancelConfirm = true") 放弃
         v-spacer
         v-btn(color='primary' width="100" depressed @click="saveNewButton") 创建
 
+    //- 放弃编辑弹窗
     v-dialog(v-model='showCancelConfirm')
         v-card
             v-card-text.pa-4
@@ -102,30 +104,42 @@ export default class AddNewButton extends Vue {
         })
     }
 
-    // 移除参数
+    /**
+     * 移除参数
+     *
+     * @param index 要移除的参数在 this.params 中的索引
+     */
     removeParam(index: number) {
         this.params.splice(index, 1)
     }
 
-    // 确认是否放弃编辑
-    @Emit('on-finish')
-    cancel(): SidebarEmitEvent {
-        return {
-            show: false
-        }
-    }
-
+    /**
+     * 回调 - 开始编辑参数
+     *
+     * @param index 要编辑的参数在 this.params 中的索引
+     */
     editParam(index: number) {
         this.editParamIndex = index
         this.editParamData = this.params[index]
         this.showParamConfig = true
     }
 
+    /**
+     * 回调 - 更新参数
+     * 参数在编辑完成后会触发该回调，通过开始编辑时保存的索引来更新 this.params
+     *
+     * @param paramData 更新后的参数数据
+     */
     updateParam(paramData: CommandParam) {
         this.showParamConfig = false
         this.params[this.editParamIndex] = paramData
     }
 
+    /**
+     * 保存编辑成果
+     * 会将按钮保存到存储
+     * 并返回编辑成功的消息
+     */
     @Emit('on-finish')
     saveNewButton(): SidebarEmitEvent {
         Storage.addNewCommand({
@@ -137,6 +151,14 @@ export default class AddNewButton extends Vue {
             show: true,
             color: 'success',
             content: '添加成功，点击右下角按钮查看'
+        }
+    }
+
+    // 确认是否放弃编辑
+    @Emit('on-finish')
+    cancel(): SidebarEmitEvent {
+        return {
+            show: false
         }
     }
 }

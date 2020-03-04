@@ -1,7 +1,3 @@
-<style lang="stylus" scoped>
-
-</style>
-
 <template lang="pug">
 v-dialog(v-model='show' persistent)
     v-card
@@ -25,6 +21,7 @@ import { Component, Prop, Emit } from 'vue-property-decorator'
 
 @Component
 export default class ParamConfig extends Vue {
+    // 要修改的 param 的值
     @Prop({
         required: true,
         default: {
@@ -35,22 +32,29 @@ export default class ParamConfig extends Vue {
     })
     value!: CommandParam
 
-    // label 属于验证
-    rules = [(v: string) => v.length <= 10 || '超过字数限制']
-
+    // 是否显示该弹出框
     @Prop({
         required: true
     })
     show!: boolean
 
+    // label 长度验证
+    rules = [(v: string) => v.length <= 10 || '超过字数限制']
+
+    /**
+     * 保存编辑结果
+     * 会将修改后的 param 返回给父组件处理
+     */
     @Emit('on-confirm')
     confirm(): CommandParam {
+        // 这些处理都是针对 label 的
         if (this.value.label === '') this.value.label = '未命名参数'
         if (this.value.label.length > 10) this.value.label = this.value.label.substring(0, 10)
 
         return this.value
     }
 
+    // 取消编辑
     @Emit('on-cancel')
     cancel() { }
 }

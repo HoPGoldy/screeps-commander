@@ -1,7 +1,3 @@
-<style lang="stylus" scoped>
-
-</style>
-
 <template lang="pug">
 v-card
     v-card-text.py-5.text-center
@@ -22,6 +18,8 @@ export default class LoadConfig extends Vue {
     // 用户输入的新配置项
     newConfig = ''
 
+    // 组件的显示状态
+    // 该值为 true 时组件将自动切换到确认是否导入的显示效果
     statsConfirm = false
 
     // 介绍内容
