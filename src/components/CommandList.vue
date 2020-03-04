@@ -8,7 +8,7 @@ v-bottom-sheet(v-model='sheetVisiable' @click:outside="close")
         .item(v-for="item, index in commandListData" :key="index")
             v-list-item(@click="onCommandClick(item)")
                 v-chip.mr-3(small disabled) {{item.shard}}
-                span {{item.title}}
+                span.d-inline-block.text-truncate.text-no-wrap {{item.title}}
             v-divider(v-if="index != commandListData.length - 1")
     parameter-collecter(v-model="collectingParam" :show="parameterCollecterVisiable" @on-close="onParamClose" @on-finish="onParamFinish")
 </template>

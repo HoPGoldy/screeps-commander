@@ -20,7 +20,7 @@ v-card
                         v-icon mdi-close-circle
                     //- 编辑参数按钮，插槽里是参数名和占位符
                     v-btn.flex-grow-1(small @click="editParam(index)")
-                        span {{param.label}}
+                        span.d-inline-block.text-truncate.text-no-wrap {{param.label}}
                         v-spacer
                         span {{param.match}}
             v-btn(block small @click="addNewParam") 添加参数

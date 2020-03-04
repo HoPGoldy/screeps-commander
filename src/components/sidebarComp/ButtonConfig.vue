@@ -8,7 +8,7 @@ v-card
     v-list
         .item(v-for="item, index in commands" :key="index")
             v-list-item
-                span {{item.title}}
+                span.d-inline-block.text-truncate.text-no-wrap {{item.title}}
                 v-spacer
                 v-btn(icon @click="editButton(index)")
                     v-icon mdi-pencil-plus
