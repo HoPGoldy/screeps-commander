@@ -21,18 +21,19 @@ v-list(flat)
         v-btn.fab-btn(v-show="inputCommand && inputCommand.length > 0" @click="sendCommand" color='green' dark fixed bottom right fab)
             v-icon mdi-arrow-right-thick
     v-fab-transition
-        v-btn.fab-btn(v-show="!inputCommand || inputCommand.length <= 0" @click="showCommandList = !showCommandList" color='pink' dark fixed bottom right fab)
+        v-btn.fab-btn(v-show="!inputCommand || inputCommand.length <= 0" @click="showCommandList" color='pink' dark fixed bottom right fab)
             v-icon mdi-code-braces
 
     //- 底部弹出的命令输入框
-    v-bottom-sheet(v-model='showCommandList')
+    v-bottom-sheet(v-model='commandListVisiable')
         Command(@select="getCommand")
     //-     v-text-field.pa-2(v-model="inputCommand" autofocus outlined label="键入命令" append-icon="mdi-chevron-double-right" @click:append="sendCommand" solo hide-details clearable)
 </template>
 
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator'
-import ScreepsApi from '../plugins/screepsApi'
+import ScreepsApi from '@/plugins/screepsApi'
+// import Storage from '@/plugins/storage'
 
 import ConsoleItem from './ConsoleItem.vue'
 import Command from './Command.vue'
@@ -45,13 +46,16 @@ export default class Console extends Mixins(ScreepsApi) {
     messageList: ConsoleMessage[] = []
 
     // 是否显示底部的命令选择框
-    showCommandList = false
+    commandListVisiable = false
 
     // 用户手动输入的命令
     inputCommand = ''
 
     // screeps 的 ws 实例
     screepsWebSock!: WebSocket
+
+    // 所有命令数据，在 showCommandList 时更新
+    commandsData!: Command[]
 
     /**
      * 向服务器发送命令
@@ -79,7 +83,7 @@ export default class Console extends Mixins(ScreepsApi) {
      */
     getCommand(cmd: string) {
         console.log('console', cmd)
-        this.showCommandList = false
+        this.commandListVisiable = false
     }
 
     /**
@@ -118,6 +122,10 @@ export default class Console extends Mixins(ScreepsApi) {
         // this.initScreepsApi().then(ws => {
         //     ws.onmessage = this.onMessage
         // })
+    }
+
+    showCommandList() {
+        this.commandListVisiable = true
     }
 
     destroyed() {

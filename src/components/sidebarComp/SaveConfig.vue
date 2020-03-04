@@ -15,11 +15,11 @@ v-card
 </template>
 
 <script lang="ts">
-import StorageApi from '@/plugins/storageApi'
-import { Component, Mixins, Emit } from 'vue-property-decorator'
+import Storage from '@/plugins/storage'
+import { Vue, Component, Emit } from 'vue-property-decorator'
 
 @Component
-export default class SaveConfig extends Mixins(StorageApi) {
+export default class SaveConfig extends Vue {
     // 要复制的数据字符串
     copyContent = ''
 
@@ -42,7 +42,7 @@ export default class SaveConfig extends Mixins(StorageApi) {
     }
 
     mounted() {
-        this.copyContent = this.getOriginStorage()
+        this.copyContent = Storage.getOrigin()
     }
 }
 </script>

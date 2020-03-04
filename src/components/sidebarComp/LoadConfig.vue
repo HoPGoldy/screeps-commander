@@ -14,11 +14,11 @@ v-card
 </template>
 
 <script lang="ts">
-import StorageApi from '@/plugins/storageApi'
-import { Component, Mixins, Emit } from 'vue-property-decorator'
+import Storage from '@/plugins/storage'
+import { Vue, Component, Emit } from 'vue-property-decorator'
 
 @Component
-export default class LoadConfig extends Mixins(StorageApi) {
+export default class LoadConfig extends Vue {
     // 用户输入的新配置项
     newConfig = ''
 
@@ -57,7 +57,7 @@ export default class LoadConfig extends Mixins(StorageApi) {
     loadConfig() {
         this.statsConfirm = false
         this.newConfig = ''
-        this.saveOriginStorage(this.newConfig)
+        Storage.saveOrigin(this.newConfig)
 
         this.finish()
     }

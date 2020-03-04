@@ -43,9 +43,8 @@ v-app
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-property-decorator'
-import StorageApi from '../plugins/storageApi'
-import { LOCAL_STORAGE_NAME } from '../config'
+import { Vue, Component } from 'vue-property-decorator'
+import Storage from '@/plugins/storage'
 
 import Boot from '../components/Boot.vue'
 import SidebarComp from '../components/sidebarComp'
@@ -53,7 +52,7 @@ import SidebarComp from '../components/sidebarComp'
 @Component({
     components: { Boot, ...SidebarComp }
 })
-export default class App extends Mixins(StorageApi) {
+export default class App extends Vue {
     // 左侧抽屉显示项目
     items = [
         { title: '创建新按钮', comp: 'add-new-button', icon: 'mdi-plus-box-multiple', persistent: true },
@@ -120,10 +119,9 @@ export default class App extends Mixins(StorageApi) {
     }
 
     mounted() {
-        // 如果本地没有数据存储的话就启动引导
-        if (!localStorage[LOCAL_STORAGE_NAME]) this.showBoot = true
-        // 有的话就初始化
-        else this.initStorage()
+        // 如果本地没有数据存储的话就启动引导, 反之进行初始化
+        if (!Storage.exist) this.showBoot = true
+        else Storage.init()
     }
 }
 </script>

@@ -53,12 +53,11 @@ v-overlay(:value='show')
  * 本组件只会在应用初次加载（未找到本地存储）时调用
  */
 import ScreepsApi from '@/plugins/screepsApi'
-import StorageApi from '@/plugins/storageApi'
-import { DEFAULT_SHARD_NAME } from '@/config'
+import Storage from '@/plugins/storage'
 import { Component, Prop, Emit, Mixins } from 'vue-property-decorator'
 
 @Component
-export default class Boot extends Mixins(ScreepsApi, StorageApi) {
+export default class Boot extends Mixins(ScreepsApi) {
     // 介绍信息
     introduceContent = [
         {
@@ -106,10 +105,7 @@ export default class Boot extends Mixins(ScreepsApi, StorageApi) {
      */
     @Emit('on-finish')
     finishBoot(): PlayerLoginData {
-        this.storage = {
-            shard: DEFAULT_SHARD_NAME,
-            commands: []
-        }
+        Storage.init()
 
         return {
             email: this.email,

@@ -44,8 +44,8 @@ v-card
 </template>
 
 <script lang="ts">
-import StorageApi from '@/plugins/storageApi'
-import { Component, Emit, Mixins } from 'vue-property-decorator'
+import Storage from '@/plugins/storage'
+import { Vue, Component, Emit } from 'vue-property-decorator'
 import { DEFAULT_SHARD_NAME } from '@/config'
 
 import Comp from './addNewButtonComp'
@@ -53,7 +53,7 @@ import Comp from './addNewButtonComp'
 @Component({
     components: { ...Comp }
 })
-export default class AddNewButton extends Mixins(StorageApi) {
+export default class AddNewButton extends Vue {
     // 新命令的参数列表
     params: CommandParam[] = []
 
@@ -128,7 +128,7 @@ export default class AddNewButton extends Mixins(StorageApi) {
 
     @Emit('on-finish')
     saveNewButton(): SidebarEmitEvent {
-        this.addNewCommand({
+        Storage.addNewCommand({
             ...this.commandInfo,
             param: this.params
         })

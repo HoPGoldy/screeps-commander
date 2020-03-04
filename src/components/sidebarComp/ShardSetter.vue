@@ -19,12 +19,12 @@ v-card
 </template>
 
 <script lang="ts">
-import { Component, Emit, Mixins } from 'vue-property-decorator'
-import StorageApi from '@/plugins/storageApi'
+import { Vue, Component, Emit } from 'vue-property-decorator'
+import Storage from '@/plugins/storage'
 import { DEFAULT_SHARD_NAME } from '@/config'
 
 @Component
-export default class ShardSetter extends Mixins(StorageApi) {
+export default class ShardSetter extends Vue {
     // 登陆用户名及密码
     shard = ''
 
@@ -36,9 +36,7 @@ export default class ShardSetter extends Mixins(StorageApi) {
     confirm() {
         if (this.shard === '') this.shard = DEFAULT_SHARD_NAME
 
-        const storage = this.storage
-        storage.shard = this.shard
-        this.storage = storage
+        Storage.setShard(this.shard)
 
         this.finish()
     }
@@ -47,7 +45,7 @@ export default class ShardSetter extends Mixins(StorageApi) {
     finish(): SidebarEmitEvent {
         return {
             show: true,
-            content: `已将控制台输出定向到 ${this.shard}`,
+            content: `已将控制台输出重定向到 ${this.shard}`,
             color: 'success'
         }
     }
@@ -60,7 +58,7 @@ export default class ShardSetter extends Mixins(StorageApi) {
     }
 
     mounted() {
-        this.shard = this.storage.shard
+        this.shard = Storage.get().shard
     }
 }
 </script>
