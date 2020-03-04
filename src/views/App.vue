@@ -120,8 +120,10 @@ export default class App extends Mixins(StorageApi) {
     }
 
     mounted() {
-        // 如果本地没有数据存储的话就启动初始化引导
+        // 如果本地没有数据存储的话就启动引导
         if (!localStorage[LOCAL_STORAGE_NAME]) this.showBoot = true
+        // 有的话就初始化
+        else this.initStorage()
     }
 }
 </script>

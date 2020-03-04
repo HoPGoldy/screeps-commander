@@ -71,8 +71,8 @@ interface LocalDataBase {
 interface Command {
     // 标题，显示在弹出窗口中
     title: string
-    // 介绍，现在在标题下方
-    introduce: string
+    // 要发送到的 shard
+    shard: string
     // 命令主体
     body: string
     // 命令中包含的参数列表
@@ -83,6 +83,8 @@ interface Command {
 interface CommandParam {
     // 在填写参数时给出的提示
     label: string
+    // 该参数的默认值
+    default: string
     // 占位符，用于在命令主体中进行参数替换
     match: string
 }
