@@ -61,7 +61,7 @@ export default class Console extends Mixins(ScreepsApi) {
      */
     sendCommand() {
         if (!this.inputCommand || this.inputCommand.length <= 0) return
-        console.log(this.inputCommand)
+        // console.log(this.inputCommand)
 
         this.sendConsoleExpression(this.inputCommand, 'shard3')
 
@@ -81,7 +81,7 @@ export default class Console extends Mixins(ScreepsApi) {
      * 回调 - 用户从命令列表中选择了一个命令
      */
     getCommand(cmd: string) {
-        console.log('console', cmd)
+        // console.log('console', cmd)
         this.commandListVisiable = false
     }
 
@@ -111,7 +111,7 @@ export default class Console extends Mixins(ScreepsApi) {
             })
         }
         catch (error) {
-            console.log('onMessage 数据解析出错', error, e)
+            // console.log('onMessage 数据解析出错', error, e)
         }
     }
 

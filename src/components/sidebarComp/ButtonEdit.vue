@@ -39,7 +39,7 @@ v-card
                 v-btn(color='error' block @click='cancel') 确认
 
     //- 帮助弹窗
-    new-button-help(:show="showHelp" @on-close="showHelp = false")
+    button-help(:show="showHelp" @on-close="showHelp = false")
 
     //- 参数弹窗
     param-config(v-model="editParamData" :show="showParamConfig" @on-cancel="showParamConfig = false" @on-confirm="updateParam")

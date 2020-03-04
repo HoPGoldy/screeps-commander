@@ -5,7 +5,7 @@
 <template lang="pug">
 v-list
     .item(v-for="item, index in value" :key="index")
-        v-list-item(@click="sendCommand('resource')")
+        v-list-item(@click="onCommandClick(item)")
             v-chip.mr-3(small disabled) {{item.shard}}
             span {{item.title}}
         v-divider(v-if="index != value.length - 1")
@@ -22,6 +22,18 @@ export default class CommandList extends Vue {
     })
     // 所有按钮的数据
     value!: Command[]
+
+    /**
+     * 回调 - 当命令按钮被点击
+     *
+     * @param commandData 被点击的命令按钮数据
+     */
+    onCommandClick(commandData: Command) {
+        if (commandData.param.length > 0) {
+            console.log('收集参数！')
+        }
+        else this.sendCommand(commandData.body)
+    }
 
     @Emit('select')
     sendCommand(cmd: string) {
