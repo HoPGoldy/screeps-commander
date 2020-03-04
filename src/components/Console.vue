@@ -18,15 +18,20 @@ v-list(flat)
     v-text-field.input-box.ma-4.mr-8(v-model="inputCommand" @keyup.enter="sendCommand" rounded label="键入命令" solo hide-details clearable)
 
     v-fab-transition
-        v-btn.fab-btn(v-show="inputCommand && inputCommand.length > 0" @click="sendCommand" color='green' dark fixed bottom right fab)
+        v-btn.fab-btn(color='green' dark fixed bottom right fab
+            v-show="inputCommand && inputCommand.length > 0"
+            @click="sendCommand"
+        )
             v-icon mdi-arrow-right-thick
     v-fab-transition
-        v-btn.fab-btn(v-show="!inputCommand || inputCommand.length <= 0" @click="showCommandList" color='pink' dark fixed bottom right fab)
+        v-btn.fab-btn(color='pink' dark fixed bottom right fab
+            v-show="!inputCommand || inputCommand.length <= 0"
+            @click="commandListVisiable = true"
+        )
             v-icon mdi-code-braces
 
     //- 底部弹出的命令输入框
-    v-bottom-sheet(v-model='commandListVisiable')
-        command-list(v-model="commandsData" @select="getCommand")
+    command-list(:show="commandListVisiable" @on-close="commandListVisiable = false" @on-select="getCommand")
 </template>
 
 <script lang="ts">
@@ -53,9 +58,6 @@ export default class Console extends Mixins(ScreepsApi) {
     // screeps 的 ws 实例
     screepsWebSock!: WebSocket
 
-    // 所有命令数据，在 showCommandList 时更新
-    commandsData: Command[] = []
-
     /**
      * 向服务器发送命令
      */
@@ -81,7 +83,7 @@ export default class Console extends Mixins(ScreepsApi) {
      * 回调 - 用户从命令列表中选择了一个命令
      */
     getCommand(cmd: string) {
-        // console.log('console', cmd)
+        console.log('收到命令', cmd)
         this.commandListVisiable = false
     }
 
@@ -121,15 +123,6 @@ export default class Console extends Mixins(ScreepsApi) {
         // this.initScreepsApi().then(ws => {
         //     ws.onmessage = this.onMessage
         // })
-    }
-
-    /**
-     * 回调 - 显示命令列表
-     * 本方法会更新命令列表
-     */
-    showCommandList() {
-        this.commandsData = Storage.get().commands
-        this.commandListVisiable = true
     }
 
     destroyed() {

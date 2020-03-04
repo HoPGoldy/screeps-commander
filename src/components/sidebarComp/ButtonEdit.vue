@@ -66,8 +66,8 @@ export default class ButtonEdit extends Vue {
 
         this.editMode = true
 
-        // 把对应的数据存放到对应的位置
-        const targetCommand = Storage.get().commands[editIndex]
+        // 把对应的数据存放到对应的位置，这里深拷贝一下，防止直接把存储里的数据改掉
+        const targetCommand = JSON.parse(JSON.stringify(Storage.get().commands[editIndex]))
         this.params = targetCommand.param
         this.commandInfo = targetCommand
     }

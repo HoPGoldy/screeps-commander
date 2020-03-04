@@ -9,7 +9,7 @@ v-card
     v-card-text.pt-0
         v-text-field(v-model="shard" label='shard 名称' hide-details)
         .mt-5.caption.grey--text.text--darken-1
-            | 用于确定本应用控制台命令发送到的 shard（默认为 shard3）
+            | 用于确定本应用控制台命令发送到的 shard（默认为 shard3）。命令按钮中配置的 shard 值会覆盖该选项。
     v-divider
     //- 下方前进后退按钮
     v-card-actions

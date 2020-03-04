@@ -25,7 +25,7 @@ export default class LoadConfig extends Vue {
     // 介绍内容
     get introduce() {
         return this.statsConfirm ? '接下来的操作会覆盖你的现存配置项，是否继续？'
-            : '将加密后的配置项粘贴到下方并点击”应用“按钮来导入配置项。'
+            : '将配置项粘贴到下方并点击”应用“按钮来导入配置项。'
     }
 
     // 导入按钮的显示文本

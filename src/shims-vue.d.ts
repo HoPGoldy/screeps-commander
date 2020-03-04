@@ -96,3 +96,9 @@ interface PlayerLoginData {
     // 密码
     password: string
 }
+
+// parameter-collecter 收集到的参数，包含用户填写的具体值
+interface ParamData {
+    match: string
+    value: string
+}
