@@ -76,6 +76,8 @@ class Storage extends Vue {
      */
     saveOrigin(dataStr: string): void {
         localStorage.setItem(LOCAL_STORAGE_NAME, dataStr)
+
+        this.init()
     }
 
     /**

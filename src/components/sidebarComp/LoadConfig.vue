@@ -53,9 +53,10 @@ export default class LoadConfig extends Vue {
 
     // 导入配置项并重设状态
     loadConfig() {
+        Storage.saveOrigin(this.newConfig)
+
         this.statsConfirm = false
         this.newConfig = ''
-        Storage.saveOrigin(this.newConfig)
 
         this.finish()
     }
@@ -64,7 +65,7 @@ export default class LoadConfig extends Vue {
     finish(): SidebarEmitEvent {
         return {
             show: true,
-            content: '导入成功，刷新页面来应用新配置项',
+            content: '导入成功',
             color: 'success'
         }
     }

@@ -33,7 +33,7 @@ export default class ButtonHelp extends Vue {
         },
         {
             title: '占位符',
-            content: '占位符代表着参数将要插入到的命令位置，参数在新建时会自动分配一个无法修改的占位符（以 $ 开头）。如果在命令中没有找到对应的占位符，该参数将被抛弃。',
+            content: '占位符代表着参数将要插入到的命令位置，参数在新建时会自动分配以 $ 开头的占位符。如果在命令中没有找到对应的占位符，该参数将被抛弃。占位符允许在命令中出现多次。',
             code: 'Game.rooms.$1.controller.level'
         }
     ]

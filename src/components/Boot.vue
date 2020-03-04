@@ -16,7 +16,7 @@ v-overlay(:value='show')
                 .pa-2.pt-0
                     v-list-item(v-for="content, index in introduceContent" :key="index")
                         v-list-item-content
-                            v-list-item-title {{content.title}}
+                            v-list-item-title.font-weight-bold {{content.title}}
                             .content {{content.text}}
             //- 第二屏
             v-window-item(:value='2')

@@ -9,7 +9,7 @@ v-card
         //- 按钮基本信息
         v-text-field.mb-4(v-model="commandInfo.title" label='名称' hide-details clearable)
         v-text-field.mb-4(v-model="commandInfo.shard" label='目标 shard' hide-details clearable)
-        v-text-field.mb-4(v-model="commandInfo.body" label='命令' hide-details clearable)
+        v-textarea.mb-4(v-model="commandInfo.body" label='命令' hide-details auto-grow clearable rows="1")
 
         //- 按钮参数列表
         .mt-5
@@ -27,7 +27,7 @@ v-card
 
     v-divider
     v-card-actions
-        v-btn(depressed width="100" @click="showCancelConfirm = true") 放弃
+        v-btn(depressed width="100" @click="showCancelConfirm = true") {{editMode ? '返回' : '放弃'}}
         v-spacer
         v-btn(color='primary' width="100" depressed @click="saveNewButton") {{editMode ? '保存' : '创建'}}
 
