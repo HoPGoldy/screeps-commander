@@ -14,9 +14,9 @@ import { Component, Vue } from 'vue-property-decorator'
 import { LOCAL_STORAGE_NAME, DEFAULT_SHARD_NAME } from '@/config'
 
 @Component
-class StorageApi extends Vue {
+class Storage extends Vue {
     // 所有应用数据都保存在该对象中
-    dataBase!: LocalDataBase
+    private dataBase!: LocalDataBase
 
     /**
      * [重要] 初始化存储
@@ -84,9 +84,30 @@ class StorageApi extends Vue {
      * @param command 新的按钮数据
      */
     addNewCommand(command: Command) {
-        const storage = this.dataBase
-        storage.commands.push(command)
-        this.dataBase = storage
+        this.dataBase.commands.push(command)
+        this.save()
+    }
+
+    /**
+     * 更新命令按钮
+     *
+     * @param index 要更新的命令索引
+     * @param command 要更新成的命令数据
+     */
+    updateCommand(index: number, command: Command) {
+        if (index >= this.dataBase.commands.length) return
+
+        this.dataBase.commands[index] = command
+        this.save()
+    }
+
+    /**
+     * 移除指定命令
+     *
+     * @param index 要移除的 command 索引
+     */
+    removeCommand(index: number) {
+        this.dataBase.commands.splice(index, 1)
 
         this.save()
     }
@@ -110,4 +131,4 @@ class StorageApi extends Vue {
     }
 }
 
-export default new StorageApi()
+export default new Storage()

@@ -16,8 +16,7 @@ v-dialog(v-model='show' @click:outside="onClose")
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component, Prop, Emit } from 'vue-property-decorator'
+import { Vue, Component, Prop, Emit } from 'vue-property-decorator'
 
 @Component
 export default class NewButtonHelp extends Vue {

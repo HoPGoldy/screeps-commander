@@ -55,7 +55,8 @@ import SidebarComp from '../components/sidebarComp'
 export default class App extends Vue {
     // 左侧抽屉显示项目
     items = [
-        { title: '创建新按钮', comp: 'add-new-button', icon: 'mdi-plus-box-multiple', persistent: true },
+        { title: '创建新按钮', comp: 'button-edit', icon: 'mdi-plus-box-multiple', persistent: true },
+        { title: '配置按钮', comp: 'button-config', icon: 'mdi-cursor-default-click', persistent: false },
         { title: '设置 shard', comp: 'shard-setter', icon: 'mdi-server', persistent: false },
         { title: '导出配置项', comp: 'save-config', icon: 'mdi-download-multiple', persistent: false },
         { title: '导入配置项', comp: 'load-config', icon: 'mdi-upload-multiple', persistent: false },

@@ -62,7 +62,7 @@ export default class Boot extends Mixins(ScreepsApi) {
     introduceContent = [
         {
             title: '数据',
-            text: '本应用所有数据均保存在本地，自动或手动清除浏览器缓存将可能导致数据丢失，请妥善使用导出 / 导入功能。'
+            text: '本应用所有数据均保存在本地，自动或手动清除浏览器缓存将可能导致数据丢失（确保浏览器已退出无痕模式），请妥善使用导出 / 导入功能。'
         },
         {
             title: '开源',

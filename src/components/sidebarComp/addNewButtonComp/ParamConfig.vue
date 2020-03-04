@@ -16,8 +16,7 @@ v-dialog(v-model='show' persistent)
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component, Prop, Emit } from 'vue-property-decorator'
+import { Vue, Component, Prop, Emit } from 'vue-property-decorator'
 
 @Component
 export default class ParamConfig extends Vue {
@@ -39,7 +38,7 @@ export default class ParamConfig extends Vue {
     show!: boolean
 
     // label 长度验证
-    rules = [(v: string) => v.length <= 10 || '超过字数限制']
+    rules = [(v: string) => !v || v.length <= 10 || '超过字数限制']
 
     /**
      * 保存编辑结果

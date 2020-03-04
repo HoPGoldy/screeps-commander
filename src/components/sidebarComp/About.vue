@@ -11,7 +11,7 @@ v-card
         v-list-item
             v-list-item-content
                 v-list-item-title 数据
-                .pt-1 本应用所有数据均保存在本地，自动或手动清除浏览器缓存将可能导致数据丢失，请妥善使用导出 / 导入功能。
+                .pt-1 本应用所有数据均保存在本地，自动或手动清除浏览器缓存将可能导致数据丢失（确保浏览器已退出无痕模式），请妥善使用导出 / 导入功能。
         v-list-item
             v-list-item-content
                 v-list-item-title 隐私
@@ -26,8 +26,7 @@ v-card
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 
 @Component
 export default class About extends Vue {

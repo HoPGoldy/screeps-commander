@@ -26,20 +26,19 @@ v-list(flat)
 
     //- 底部弹出的命令输入框
     v-bottom-sheet(v-model='commandListVisiable')
-        Command(@select="getCommand")
-    //-     v-text-field.pa-2(v-model="inputCommand" autofocus outlined label="键入命令" append-icon="mdi-chevron-double-right" @click:append="sendCommand" solo hide-details clearable)
+        command-list(v-model="commandsData" @select="getCommand")
 </template>
 
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator'
 import ScreepsApi from '@/plugins/screepsApi'
-// import Storage from '@/plugins/storage'
+import Storage from '@/plugins/storage'
 
 import ConsoleItem from './ConsoleItem.vue'
-import Command from './Command.vue'
+import CommandList from './CommandList.vue'
 
 @Component({
-    components: { ConsoleItem, Command }
+    components: { ConsoleItem, CommandList }
 })
 export default class Console extends Mixins(ScreepsApi) {
     // 所有信息的保存队列
@@ -55,7 +54,7 @@ export default class Console extends Mixins(ScreepsApi) {
     screepsWebSock!: WebSocket
 
     // 所有命令数据，在 showCommandList 时更新
-    commandsData!: Command[]
+    commandsData: Command[] = []
 
     /**
      * 向服务器发送命令
@@ -124,7 +123,12 @@ export default class Console extends Mixins(ScreepsApi) {
         // })
     }
 
+    /**
+     * 回调 - 显示命令列表
+     * 本方法会更新命令列表
+     */
     showCommandList() {
+        this.commandsData = Storage.get().commands
         this.commandListVisiable = true
     }
 

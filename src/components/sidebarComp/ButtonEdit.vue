@@ -1,7 +1,7 @@
 <template lang="pug">
 v-card
     v-card-title.title.font-weight-regular.justify-space-between.pb-1
-        span 添加新按钮
+        span {{editMode ? '编辑按钮' : '添加新按钮'}}
         v-spacer
         v-btn(icon @click="showHelp = true")
             v-icon mdi-help-circle-outline
@@ -29,13 +29,13 @@ v-card
     v-card-actions
         v-btn(depressed width="100" @click="showCancelConfirm = true") 放弃
         v-spacer
-        v-btn(color='primary' width="100" depressed @click="saveNewButton") 创建
+        v-btn(color='primary' width="100" depressed @click="saveNewButton") {{editMode ? '保存' : '创建'}}
 
     //- 放弃编辑弹窗
     v-dialog(v-model='showCancelConfirm')
         v-card
             v-card-text.pa-4
-                .text-center.mb-4 确认放弃编辑？该按钮的所有配置都将被清空。
+                .text-center.mb-4 确认放弃编辑？{{editMode ? '新修改的内容不会被保存' : '该按钮的所有配置都将被清空。'}}
                 v-btn(color='error' block @click='cancel') 确认
 
     //- 帮助弹窗
@@ -47,7 +47,7 @@ v-card
 
 <script lang="ts">
 import Storage from '@/plugins/storage'
-import { Vue, Component, Emit } from 'vue-property-decorator'
+import { Vue, Component, Emit, Prop, Watch } from 'vue-property-decorator'
 import { DEFAULT_SHARD_NAME } from '@/config'
 
 import Comp from './addNewButtonComp'
@@ -55,7 +55,26 @@ import Comp from './addNewButtonComp'
 @Component({
     components: { ...Comp }
 })
-export default class AddNewButton extends Vue {
+export default class ButtonEdit extends Vue {
+    @Prop()
+    editIndex!: number
+
+    @Watch('editIndex')
+    switchToEditMode(editIndex: number) {
+        // 大于 0 时才会切换状态
+        if (this.editIndex < 0) return
+
+        this.editMode = true
+
+        // 把对应的数据存放到对应的位置
+        const targetCommand = Storage.get().commands[editIndex]
+        this.params = targetCommand.param
+        this.commandInfo = targetCommand
+    }
+
+    // 是否启用编辑模式，默认为新建模式
+    editMode = false
+
     // 新命令的参数列表
     params: CommandParam[] = []
 
@@ -142,7 +161,15 @@ export default class AddNewButton extends Vue {
      */
     @Emit('on-finish')
     saveNewButton(): SidebarEmitEvent {
-        Storage.addNewCommand({
+        const returnContent = this.editMode ? '保存成功' : '添加成功，点击右下角按钮查看'
+
+        if (this.editMode) {
+            Storage.updateCommand(this.editIndex, {
+                ...this.commandInfo,
+                param: this.params
+            })
+        }
+        else Storage.addNewCommand({
             ...this.commandInfo,
             param: this.params
         })
@@ -150,7 +177,7 @@ export default class AddNewButton extends Vue {
         return {
             show: true,
             color: 'success',
-            content: '添加成功，点击右下角按钮查看'
+            content: returnContent
         }
     }
 
