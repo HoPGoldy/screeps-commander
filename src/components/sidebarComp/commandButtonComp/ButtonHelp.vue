@@ -19,7 +19,7 @@ v-dialog(v-model='show' @click:outside="onClose")
 import { Vue, Component, Prop, Emit } from 'vue-property-decorator'
 
 @Component
-export default class NewButtonHelp extends Vue {
+export default class ButtonHelp extends Vue {
     // 本页显示的所有数据
     info = [
         {

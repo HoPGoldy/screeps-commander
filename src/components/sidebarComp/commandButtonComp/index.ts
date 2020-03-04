@@ -1,7 +1,7 @@
-import NewButtonHelp from './NewButtonHelp.vue'
+import ButtonHelp from './ButtonHelp.vue'
 import ParamConfig from './ParamConfig.vue'
 
 export default {
-    NewButtonHelp,
+    ButtonHelp,
     ParamConfig
 }

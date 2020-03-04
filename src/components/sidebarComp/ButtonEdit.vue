@@ -50,7 +50,7 @@ import Storage from '@/plugins/storage'
 import { Vue, Component, Emit, Prop, Watch } from 'vue-property-decorator'
 import { DEFAULT_SHARD_NAME } from '@/config'
 
-import Comp from './addNewButtonComp'
+import Comp from './commandButtonComp'
 
 @Component({
     components: { ...Comp }
