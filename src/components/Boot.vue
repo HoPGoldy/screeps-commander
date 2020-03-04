@@ -81,6 +81,9 @@ export default class Boot extends Mixins(ScreepsApi) {
     email = ''
     password = ''
 
+    // 令牌，将在登陆成功后获取
+    sessionToken = ''
+
     // 确认按钮是否载入中
     confirmBtnLoading = false
 
@@ -104,13 +107,10 @@ export default class Boot extends Mixins(ScreepsApi) {
      * 在本地新建数据结构并触发完成初始化的回调
      */
     @Emit('on-finish')
-    finishBoot(): PlayerLoginData {
+    finishBoot(): string {
         Storage.init()
 
-        return {
-            email: this.email,
-            password: this.password
-        }
+        return this.sessionToken
     }
 
     /**
@@ -134,7 +134,8 @@ export default class Boot extends Mixins(ScreepsApi) {
         this.message('info', '正在向 Screeps 服务器验证身份...')
 
         // 发起请求
-        this.getSessionToken(this.email, this.password).then(() => {
+        this.getSessionToken(this.email, this.password).then(token => {
+            this.sessionToken = token
             this.step++
             this.message('success', '验证成功')
             this.confirmBtnLoading = false

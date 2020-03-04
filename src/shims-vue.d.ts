@@ -13,7 +13,7 @@ type ServerList = {
 
 // 控制台信息组件所需的数据格式
 interface ConsoleMessage {
-    content: string
+    content: string[]
     icon: string
 }
 

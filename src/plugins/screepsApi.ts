@@ -17,12 +17,11 @@ export default class ScreepsApi extends Vue {
     /**
      * 初始化 Screeps 的 Api 访问
      *
-     * @param email 登陆需要的邮箱
-     * @param password 登陆密码
+     * @param token 初始化 ws 需要的 SESSION_TOKEN
      */
-    initScreepsApi(email: string, password: string) {
+    initScreepsApi(token: string) {
         // 获取 玩家的 id，用来订阅 console
-        const promiseGetPlayId = this.getSessionToken(email, password).then(token => this.getPlayerInfo(token))
+        const promiseGetPlayId = this.getPlayerInfo(token)
         // 获取 screeps 的 webSocket
         const promiseInitWs = this.initWebSocket()
 

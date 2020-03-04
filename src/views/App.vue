@@ -35,8 +35,6 @@ v-app
     v-dialog(v-model='showSidebar' eager :persistent="sidebarPersistent")
         component(:is="activeSidebar" @on-finish="onSidebarFinish")
 
-    Boot(:show="showBoot" @on-finish="onBootFinish")
-
     //- 消息弹窗
     v-snackbar(v-model="showMessage" :color="messageColor") {{messageText}}
         v-btn(text @click="showMessage = false") 关闭
@@ -44,13 +42,11 @@ v-app
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import Storage from '@/plugins/storage'
 
-import Boot from '../components/Boot.vue'
 import SidebarComp from '../components/sidebarComp'
 
 @Component({
-    components: { Boot, ...SidebarComp }
+    components: { ...SidebarComp }
 })
 export default class App extends Vue {
     // 左侧抽屉显示项目
@@ -73,20 +69,10 @@ export default class App extends Vue {
     // 当前要展示的侧边栏组件名称
     activeSidebar = 'save-config'
 
-    // 是否展示初始化引导
-    showBoot = false
-
     // 弹出框的基本信息
     showMessage = false
     messageColor = 'success'
     messageText = ''
-
-    /**
-     * 回调 - 完成初始化工作
-     */
-    onBootFinish() {
-        this.showBoot = false
-    }
 
     /**
      * 回调 - 侧边栏按钮被点击
@@ -120,9 +106,7 @@ export default class App extends Vue {
     }
 
     mounted() {
-        // 如果本地没有数据存储的话就启动引导, 反之进行初始化
-        if (!Storage.exist) this.showBoot = true
-        else Storage.init()
+
     }
 }
 </script>

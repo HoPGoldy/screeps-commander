@@ -9,29 +9,34 @@
 </style>
 
 <template lang="pug">
-v-list(flat)
-    v-list-item-group(color='primary')
-        .item(v-for='(item, i) in messageList', :key='i')
-            ConsoleItem(:content="item.content" :icon="item.icon")
-    .fill-block(ref="itemList")
+.console-container
+    v-list(dense)
+        v-list-item-group(color='primary')
+            .item(v-for='(item, i) in messageList', :key='i')
+                ConsoleItem(:content="item.content" :icon="item.icon")
+        .fill-block(ref="itemList")
 
-    v-text-field.input-box.ma-4.mr-8(v-model="inputCommand" @keyup.enter="sendCommand" rounded label="键入命令" solo hide-details clearable)
+        v-text-field.input-box.ma-4.mr-8(v-model="inputCommand" @keyup.enter="sendCommand" rounded label="键入命令" solo hide-details clearable)
 
-    v-fab-transition
-        v-btn.fab-btn(color='green' dark fixed bottom right fab
-            v-show="inputCommand && inputCommand.length > 0"
-            @click="sendCommand"
-        )
-            v-icon mdi-arrow-right-thick
-    v-fab-transition
-        v-btn.fab-btn(color='pink' dark fixed bottom right fab
-            v-show="!inputCommand || inputCommand.length <= 0"
-            @click="commandListVisiable = true"
-        )
-            v-icon mdi-code-braces
+        v-fab-transition
+            v-btn.fab-btn(color='green' dark fixed bottom right fab
+                v-show="inputCommand && inputCommand.length > 0"
+                @click="sendCommand"
+            )
+                v-icon mdi-arrow-right-thick
+        v-fab-transition
+            v-btn.fab-btn(color='pink' dark fixed bottom right fab
+                v-show="!inputCommand || inputCommand.length <= 0"
+                @click="commandListVisiable = true"
+            )
+                v-icon mdi-code-braces
 
     //- 底部弹出的命令输入框
     command-list(:show="commandListVisiable" @on-close="commandListVisiable = false" @on-select="getCommand")
+
+    //- 初始化时的准备工作，boot 比 login 多了个应用介绍
+    boot(:show="bootVisable" @on-finish="onLoginSuccess")
+    login(:show="loginVisable" @on-success="onLoginSuccess")
 </template>
 
 <script lang="ts">
@@ -39,11 +44,13 @@ import { Component, Mixins } from 'vue-property-decorator'
 import ScreepsApi from '@/plugins/screepsApi'
 import Storage from '@/plugins/storage'
 
+import Boot from '@/components/Boot.vue'
+import Login from '@/components/Login.vue'
 import ConsoleItem from './ConsoleItem.vue'
 import CommandList from './CommandList.vue'
 
 @Component({
-    components: { ConsoleItem, CommandList }
+    components: { ConsoleItem, CommandList, Boot, Login }
 })
 export default class Console extends Mixins(ScreepsApi) {
     // 所有信息的保存队列
@@ -58,6 +65,11 @@ export default class Console extends Mixins(ScreepsApi) {
     // screeps 的 ws 实例
     screepsWebSock!: WebSocket
 
+    // 是否展示初始化引导
+    bootVisable = false
+    // 是否展示登陆页面
+    loginVisable = false
+
     /**
      * 向服务器发送命令
      */
@@ -69,7 +81,7 @@ export default class Console extends Mixins(ScreepsApi) {
 
         // 显示该信息
         this.messageList.push({
-            content: this.inputCommand,
+            content: [this.inputCommand],
             icon: 'mdi-arrow-top-left'
         })
 
@@ -85,6 +97,10 @@ export default class Console extends Mixins(ScreepsApi) {
     getCommand(cmd: string) {
         console.log('收到命令', cmd)
         this.commandListVisiable = false
+
+        // 直接发送命令
+        this.inputCommand = cmd
+        this.sendCommand()
     }
 
     /**
@@ -108,7 +124,7 @@ export default class Console extends Mixins(ScreepsApi) {
 
             // 显示消息
             this.messageList.push({
-                content: logs.join('|||'),
+                content: logs[0].split('\n'),
                 icon: 'mdi-arrow-bottom-right'
             })
         }
@@ -117,12 +133,28 @@ export default class Console extends Mixins(ScreepsApi) {
         }
     }
 
-    mounted() {
+    /**
+     * 回调 - 完成初始化工作
+     */
+    onLoginSuccess(sessionToken: string) {
+        this.bootVisable = false
+        this.loginVisable = false
+
+        console.log('令牌为', sessionToken)
         // 初始化 screeps 所有后端设置
-        // 初始完成后设置接受数据回调
-        // this.initScreepsApi().then(ws => {
-        //     ws.onmessage = this.onMessage
-        // })
+        // 初始完成后设置 ws 的数据接收回调
+        this.initScreepsApi(sessionToken).then(ws => {
+            ws.onmessage = this.onMessage
+        })
+    }
+
+    mounted() {
+        // 如果本地没有数据存储的话就启动引导, 反之进行初始化
+        if (!Storage.exist) this.bootVisable = true
+        else {
+            Storage.init()
+            this.loginVisable = true
+        }
     }
 
     destroyed() {
