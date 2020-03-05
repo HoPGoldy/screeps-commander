@@ -169,7 +169,10 @@ export default class Console extends Mixins(ScreepsApi) {
                 this.addNewMessage(data.error.split('\n'), 'mdi-alert-circle', false)
             }
             else {
-                if (data.messages.log.length > 0) logs = data.messages.log
+                if (data.messages.log.length > 0) {
+                    // 把每一个信息中种的 \n 都拆出来，不然信息加载到 html 中后不会自动换行
+                    logs = data.messages.log.map(log => log.split('\n')).flat()
+                }
                 else if (data.messages.results.length > 0) logs = data.messages.results[0].split('\n')
                 // 由于 screeps ws 每 tick 都会返回一条信息，所以会包含大量的空数据，这里将其剔除不显示
                 else return
