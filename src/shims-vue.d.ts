@@ -13,8 +13,11 @@ type ServerList = {
 
 // 控制台信息组件所需的数据格式
 interface ConsoleMessage {
+    // 消息正文
     content: string[]
+    // 消息前的图标
     icon: string
+    // 是否加载中
     loading: boolean
 }
 
@@ -56,6 +59,8 @@ interface ScreepsConsoleMessage {
         // 控制台消息正文
         results: string[];
     }
+    // 如果发送的指令有异常的话会在这里包含错误信息
+    error?: string
     // 哪个 shard 的消息
     shard: string
 }

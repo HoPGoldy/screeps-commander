@@ -93,6 +93,8 @@ export default class Console extends Mixins(ScreepsApi) {
         this.sendConsoleExpression(command, shard).then(resp => {
             console.log('命令发送完成', resp)
             message.loading = false
+        }).catch(error => {
+            console.log(error)
         })
 
         // 显示该信息
@@ -109,7 +111,6 @@ export default class Console extends Mixins(ScreepsApi) {
      * 回调 - 用户从命令列表中选择了一个命令
      */
     getCommand(e: GetCommandEvent) {
-        console.log('收到命令', e.command)
         this.commandListVisiable = false
 
         // 直接发送命令
@@ -124,22 +125,28 @@ export default class Console extends Mixins(ScreepsApi) {
     onMessage(e: MessageEvent) {
         // 具有实际载荷的消息才会被解析
         if (e.data[0] !== 'a') return
+
         try {
             // 后面写死的 [0] 是因为控制台日志都报错在该条目里
             const dataStr = JSON.parse(e.data.substring(1))[0]
-            console.log('Console -> onMessage -> dataStr', dataStr)
             // 后面写死的 [1] 是因为第一个元素是用户的 id，第二个元素包含的是控制台的实际输出
             const data: ScreepsConsoleMessage = JSON.parse(dataStr)[1]
-            console.log('results', data.messages.results, 'log', data.messages.log)
+            // console.log('results', data.messages.results, 'log', data.messages.log)
             let logs: string[]
 
-            if (data.messages.log.length > 0) logs = data.messages.log
-            else if (data.messages.results.length > 0) logs = data.messages.results[0].split('\n')
-            // 由于 screeps ws 每 tick 都会返回一条信息，所以会包含大量的如下空数据，这里将其剔除不显示
-            else return
+            // 先看一下是不是错误信息
+            if (data.error) {
+                this.addNewMessage(data.error.split('\n'), 'mdi-arrow-bottom-right-thick', false)
+            }
+            else {
+                if (data.messages.log.length > 0) logs = data.messages.log
+                else if (data.messages.results.length > 0) logs = data.messages.results[0].split('\n')
+                // 由于 screeps ws 每 tick 都会返回一条信息，所以会包含大量的空数据，这里将其剔除不显示
+                else return
 
-            // 显示消息
-            this.addNewMessage(logs, 'mdi-arrow-bottom-right-thick', false)
+                // 显示消息
+                this.addNewMessage(logs, 'mdi-arrow-bottom-right-thick', false)
+            }
 
             this.scrollToBottom()
         }
@@ -168,7 +175,6 @@ export default class Console extends Mixins(ScreepsApi) {
         this.bootVisable = false
         this.loginVisable = false
 
-        console.log('令牌为', sessionToken)
         this.addNewMessage(['登录成功'], 'mdi-key', false)
         const wsMessage = this.addNewMessage(['正在订阅 Screeps WebSocket, 请稍后...'], 'mdi-wifi')
         // 初始化 screeps 所有后端设置
@@ -177,6 +183,8 @@ export default class Console extends Mixins(ScreepsApi) {
             ws.onmessage = this.onMessage
             wsMessage.loading = false
             wsMessage.content = ['Screeps WebSocket 订阅成功!']
+
+            this.addNewMessage(['您现在可以正常与控制台进行交互'], 'mdi-wifi', false)
         })
     }
 

@@ -16,6 +16,14 @@
 </template>
 
 <script lang="ts">
+/**
+ * 控制台信息组件
+ *
+ * 这里有个问题，因为如下原因导致了不能动态调整显示内容的行数：
+ * - 动态调整显示行数需要在内容发生变化时动态增减 div
+ * - div 的动态增减是异步的，但是没有找到回调方法
+ * - 上面两条导致数据的赋值在 div 创建之前，就引发了不显示内容的问题
+ */
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 
 @Component

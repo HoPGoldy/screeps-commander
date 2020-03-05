@@ -22,7 +22,10 @@ v-overlay(:value='show')
             v-window-item(:value='2')
                 v-card-text.pt-0
                     v-text-field(v-model="email" label='Screeps 登陆邮箱' hide-details)
-                    v-text-field.mt-2(v-model="password" label='Screeps 登陆密码' @keyup.enter="next" hide-details type="password")
+                    v-text-field.mt-2(v-model="password" label='Screeps 登陆密码' @keyup.enter="next" hide-details
+                        :append-icon="passwordVisiable ? 'mdi-eye' : 'mdi-eye-off'" :type="passwordVisiable ? 'text' : 'password'"
+                        @click:append="passwordVisiable = !passwordVisiable"
+                    )
                     .mt-5.caption.grey--text.text--darken-1
                         | 本应用不会记录您的任何身份信息，所以在退出应用后将需要重新登录。
             //- 第三屏
@@ -76,6 +79,9 @@ export default class Boot extends Mixins(ScreepsApi) {
     // 是否显示该引导页
     @Prop()
     show!: boolean
+
+    // 密码是否可见
+    passwordVisiable = false
 
     // 登陆用户名及密码
     email = ''
