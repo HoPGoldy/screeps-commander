@@ -137,7 +137,7 @@ export default class Boot extends Mixins(ScreepsApi) {
      * 会确认用户的登陆信息是否正确
      */
     login() {
-        if (this.email === '' || this.password === '') return
+        if (this.email === '' || this.password === '' || this.confirmBtnLoading) return
 
         // 设置页面状态
         this.confirmBtnLoading = true

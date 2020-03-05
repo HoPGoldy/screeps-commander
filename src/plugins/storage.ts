@@ -11,7 +11,7 @@
  */
 
 import { Component, Vue } from 'vue-property-decorator'
-import { LOCAL_STORAGE_NAME, DEFAULT_SHARD_NAME } from '@/config'
+import { LOCAL_STORAGE_NAME, DEFAULT_SHARD_NAME, DEFAULT_COMMANDS } from '@/config'
 
 @Component
 class Storage extends Vue {
@@ -29,7 +29,7 @@ class Storage extends Vue {
         if (!localData) {
             this.dataBase = {
                 shard: DEFAULT_SHARD_NAME,
-                commands: []
+                commands: DEFAULT_COMMANDS
             }
 
             // 保存到本地

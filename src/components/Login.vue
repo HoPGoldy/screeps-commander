@@ -59,7 +59,7 @@ export default class Login extends Mixins(ScreepsApi) {
      * 会确认用户的登陆信息是否正确
      */
     login() {
-        if (this.email === '' || this.password === '') return
+        if (this.email === '' || this.password === '' || this.loading) return
 
         // 设置为登陆中
         this.loading = true
@@ -67,7 +67,6 @@ export default class Login extends Mixins(ScreepsApi) {
 
         // 发起请求
         this.getSessionToken(this.email, this.password).then(token => {
-            this.message('success', '验证成功')
             this.loginSuccess(token)
         }).catch(() => {
             this.loading = false
