@@ -1,16 +1,11 @@
-<style lang="stylus" scoped>
-.message-content
-    overflow-x scroll
-</style>
-
 <template lang="pug">
 .console-item-contaienr
-    v-list-item
+    v-list-item(:ripple="false")
         v-list-item-icon.my-3.mr-4
             v-btn(icon small :loading="loading" @click="copyContent")
                 v-icon(:color="iconColor") {{icon}}
         v-list-item-content
-            .message-content.body-2(ref="content")
+            .body-2(ref="content")
                 .my-2(v-for="_ in content")
     v-divider
 </template>

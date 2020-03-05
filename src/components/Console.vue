@@ -11,7 +11,7 @@
 <template lang="pug">
 .console-container
     v-list(dense)
-        v-list-item-group(color='primary' :ripple="false")
+        v-list-item-group(color='primary')
             .item(v-for='(item, i) in messageList', :key='i')
                 console-item(:content="item.content" :icon="item.icon" :loading="item.loading" @on-icon-click="pasteMessage")
         .fill-block(v-intersect="onIntersect" ref="itemList")
