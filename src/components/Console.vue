@@ -11,9 +11,9 @@
 <template lang="pug">
 .console-container
     v-list(dense)
-        v-list-item-group(color='primary')
+        v-list-item-group(color='primary' :ripple="false")
             .item(v-for='(item, i) in messageList', :key='i')
-                console-item(:content="item.content" :icon="item.icon" :loading="item.loading")
+                console-item(:content="item.content" :icon="item.icon" :loading="item.loading" @on-icon-click="pasteMessage")
         .fill-block(v-intersect="onIntersect" ref="itemList")
 
         v-text-field.input-box.ma-4.mr-8(v-model="inputCommand" @keyup.enter="onCommandSend" rounded label="键入命令" solo hide-details clearable)
@@ -73,6 +73,15 @@ export default class Console extends Mixins(ScreepsApi) {
     // 列表底部是否可见
     // 会根据该值决定是否在收到新消息时自动滚动
     fillBlockVisiable = false
+
+    /**
+     * 回调 - 将该行的内容粘贴到输入框
+     *
+     * @param data 该行的所有数据
+     */
+    pasteMessage(data: string[]) {
+        this.inputCommand = data.join('\n')
+    }
 
     /**
      * 回调 - 用户尝试发送一条手写命令

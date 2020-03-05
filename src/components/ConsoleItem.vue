@@ -7,7 +7,7 @@
 .console-item-contaienr
     v-list-item
         v-list-item-icon.my-3.mr-4
-            v-btn(icon small :loading="loading")
+            v-btn(icon small :loading="loading" @click="copyContent")
                 v-icon(:color="iconColor") {{icon}}
         v-list-item-content
             .message-content.body-2(ref="content")
@@ -24,7 +24,7 @@
  * - div 的动态增减是异步的，但是没有找到回调方法
  * - 上面两条导致数据的赋值在 div 创建之前，就引发了不显示内容的问题
  */
-import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
+import { Vue, Component, Prop, Watch, Emit } from 'vue-property-decorator'
 
 @Component
 export default class ConsoleItem extends Vue {
@@ -59,6 +59,12 @@ export default class ConsoleItem extends Vue {
         for (let i = 0; i < contentBox.children.length; i++) {
             contentBox.children[i].innerHTML = newData[i]
         }
+    }
+
+    // 当图标被点击时会返回该行的数据
+    @Emit('on-icon-click')
+    copyContent(): string[] {
+        return this.content
     }
 
     mounted() {
