@@ -50,8 +50,9 @@ export default class CommandList extends Vue {
     // 等待收集的参数，用于初始化 parameter-collecter 组件
     collectingParam: CommandParam[] = []
 
-    // 被选中的命令主体
+    // 被选中的命令主体与 shard 名
     selectCommand = ''
+    selectShard = ''
 
     /**
      * 回调 - 当命令按钮被点击
@@ -63,6 +64,7 @@ export default class CommandList extends Vue {
         if (commandData.param.length > 0) {
             this.collectingParam = commandData.param
             this.selectCommand = commandData.body
+            this.selectShard = commandData.shard
             this.parameterCollecterVisiable = true
         }
         // 否则直接发送命令
@@ -71,8 +73,11 @@ export default class CommandList extends Vue {
 
     // 触发回调 - 返回用户点击的命令给父组件
     @Emit('on-select')
-    sendCommand(cmd: string) {
-        return cmd
+    sendCommand(cmd: string): GetCommandEvent {
+        return {
+            command: cmd,
+            shard: this.selectShard
+        }
     }
 
     // 触发回调 - 点击外部区域关闭

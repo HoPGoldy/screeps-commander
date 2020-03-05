@@ -91,15 +91,11 @@ export default class ScreepsApi extends Vue {
      * @param cmd 要发送的命令
      * @param shard 要发送到的 shard
      */
-    sendConsoleExpression(cmd: string, shard: string) {
-        if (!this.playerInfo) return
-
-        $post('/api/user/console', {
+    sendConsoleExpression(cmd: string, shard: string): Promise<object> {
+        return $post('/api/user/console', {
             expression: cmd,
             shard
-        }, { 'X-token': this.playerInfo.sessionToken }).then(resp => {
-            console.log(resp)
-        })
+        }, { 'X-token': this.playerInfo.sessionToken })
     }
 
     /**

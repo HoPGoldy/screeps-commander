@@ -11,7 +11,7 @@ v-overlay(:value='show')
         v-card-title.title.font-weight-regular.justify-space-between.pb-1 身份认证
         v-card-text.px-2.pb-2
             v-text-field.ma-2(v-model="email" label='Screeps 登陆邮箱' hide-details :disabled="loading")
-            v-text-field.ma-2(v-model="password" label='Screeps 登陆密码' hide-details type="password" :disabled="loading")
+            v-text-field.ma-2(v-model="password" label='Screeps 登陆密码' hide-details @keyup.enter="login" type="password" :disabled="loading")
             .ma-2.caption.grey--text.text--darken-1
                 | 本应用不会记录您的任何身份信息，所以在退出应用后将需要重新登录。
 

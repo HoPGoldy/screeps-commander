@@ -15,6 +15,7 @@ type ServerList = {
 interface ConsoleMessage {
     content: string[]
     icon: string
+    loading: boolean
 }
 
 // 侧边栏”完成工作“回调的返回信息
@@ -89,16 +90,14 @@ interface CommandParam {
     match: string
 }
 
-// 用户登陆信息
-interface PlayerLoginData {
-    // 用户名
-    email: string
-    // 密码
-    password: string
-}
-
 // parameter-collecter 收集到的参数，包含用户填写的具体值
 interface ParamData {
     match: string
     value: string
+}
+
+// 用户在命令列表中点击一个按钮所返回的数据
+interface GetCommandEvent {
+    command: string
+    shard: string
 }
