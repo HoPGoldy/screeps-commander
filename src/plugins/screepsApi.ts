@@ -1,4 +1,5 @@
 import { Component, Vue } from 'vue-property-decorator'
+import { AxiosResponse } from 'axios'
 import { $get, $post } from './axios'
 
 @Component
@@ -91,7 +92,7 @@ export default class ScreepsApi extends Vue {
      * @param cmd 要发送的命令
      * @param shard 要发送到的 shard
      */
-    sendConsoleExpression(cmd: string, shard: string): Promise<object> {
+    sendConsoleExpression(cmd: string, shard: string): Promise<AxiosResponse> {
         return $post('/api/user/console', {
             expression: cmd,
             shard

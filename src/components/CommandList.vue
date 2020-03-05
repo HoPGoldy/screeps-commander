@@ -60,11 +60,12 @@ export default class CommandList extends Vue {
      * @param commandData 被点击的命令按钮数据
      */
     onCommandClick(commandData: Command) {
+        this.selectCommand = commandData.body
+        this.selectShard = commandData.shard
+
         // 如果需要输入参数的话就把点击的命令保存下来，然后弹出参数收集框
         if (commandData.param.length > 0) {
             this.collectingParam = commandData.param
-            this.selectCommand = commandData.body
-            this.selectShard = commandData.shard
             this.parameterCollecterVisiable = true
         }
         // 否则直接发送命令

@@ -68,6 +68,10 @@ export default class Boot extends Mixins(ScreepsApi) {
             text: '本应用所有数据均保存在本地，自动或手动清除浏览器缓存将可能导致数据丢失（确保浏览器已退出无痕模式），请妥善使用导出 / 导入功能。'
         },
         {
+            title: '网络',
+            text: '本应用不会优化与 Screeps 的连接质量，在网络不好时可能会出现命令丢失等问题。'
+        },
+        {
             title: '开源',
             text: '本应用代码已开源至 github。更多信息请访问”关于“页。'
         }

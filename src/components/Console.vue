@@ -14,7 +14,7 @@
         v-list-item-group(color='primary')
             .item(v-for='(item, i) in messageList', :key='i')
                 console-item(:content="item.content" :icon="item.icon" :loading="item.loading")
-        .fill-block(ref="itemList")
+        .fill-block(v-intersect="onIntersect" ref="itemList")
 
         v-text-field.input-box.ma-4.mr-8(v-model="inputCommand" @keyup.enter="onCommandSend" rounded label="键入命令" solo hide-details clearable)
 
@@ -70,6 +70,10 @@ export default class Console extends Mixins(ScreepsApi) {
     // 是否展示登陆页面
     loginVisable = false
 
+    // 列表底部是否可见
+    // 会根据该值决定是否在收到新消息时自动滚动
+    fillBlockVisiable = false
+
     /**
      * 回调 - 用户尝试发送一条手写命令
      */
@@ -93,13 +97,30 @@ export default class Console extends Mixins(ScreepsApi) {
         this.sendConsoleExpression(command, shard).then(resp => {
             console.log('命令发送完成', resp)
             message.loading = false
+
+            if (resp.data.error) {
+                message.icon = 'mdi-alert-circle'
+                this.addNewMessage(['发送失败: ' + resp.data.error], 'mdi-alert-circle', false)
+            }
         }).catch(error => {
-            console.log(error)
+            message.loading = false
+            message.icon = 'mdi-alert-circle'
+            this.addNewMessage(['啊哦，命令发送失败，请尝试刷新网页并重写登陆', error], 'mdi-alert-circle', false)
         })
 
         // 显示该信息
 
         this.scrollToBottom()
+    }
+
+    /**
+     * 回调 - 底部位置监听
+     *
+     * @param entries 触发监听的元素
+     */
+    onIntersect(entries: IntersectionObserverEntry[]) {
+        // 更新列表底部元素是否可见
+        this.fillBlockVisiable = entries[0].isIntersecting
     }
 
     // 向下滚动至底部
@@ -136,7 +157,7 @@ export default class Console extends Mixins(ScreepsApi) {
 
             // 先看一下是不是错误信息
             if (data.error) {
-                this.addNewMessage(data.error.split('\n'), 'mdi-arrow-bottom-right-thick', false)
+                this.addNewMessage(data.error.split('\n'), 'mdi-alert-circle', false)
             }
             else {
                 if (data.messages.log.length > 0) logs = data.messages.log
@@ -148,7 +169,9 @@ export default class Console extends Mixins(ScreepsApi) {
                 this.addNewMessage(logs, 'mdi-arrow-bottom-right-thick', false)
             }
 
-            this.scrollToBottom()
+            // 只有当能看到页面底部时才会自动滚动
+            // 防止出现用户在看上面信息时列表没眼色的自动滚动
+            if (this.fillBlockVisiable) this.scrollToBottom()
         }
         catch (error) {
             console.log('onMessage 数据解析出错', error, e)

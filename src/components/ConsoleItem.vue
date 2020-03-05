@@ -46,6 +46,7 @@ export default class ConsoleItem extends Vue {
     get iconColor() {
         if (this.icon === 'mdi-arrow-bottom-right-thick') return 'amber'
         else if (this.icon === 'mdi-arrow-top-left-thick') return 'light-blue'
+        else if (this.icon === 'mdi-alert-circle') return 'error'
         else return 'light-green'
     }
 
