@@ -155,6 +155,19 @@ export default class ButtonEdit extends Vue {
     }
 
     /**
+     * 重设所有输入内容
+     */
+    reset() {
+        this.params = []
+
+        this.commandInfo = {
+            title: '新按钮',
+            shard: DEFAULT_SHARD_NAME,
+            body: 'Game.time'
+        }
+    }
+
+    /**
      * 保存编辑成果
      * 会将按钮保存到存储
      * 并返回编辑成功的消息
@@ -163,16 +176,18 @@ export default class ButtonEdit extends Vue {
     saveNewButton(): SidebarEmitEvent {
         const returnContent = this.editMode ? '保存成功' : '添加成功，点击右下角按钮查看'
 
-        if (this.editMode) {
-            Storage.updateCommand(this.editIndex, {
-                ...this.commandInfo,
-                param: this.params
-            })
-        }
-        else Storage.addNewCommand({
+        // 这里深拷贝一下，防止按钮之间相关影响
+        const CommandData: Command = JSON.parse(JSON.stringify({
             ...this.commandInfo,
             param: this.params
-        })
+        }))
+
+        // 如果是编辑模式则更新数据
+        // 否则新增数据
+        if (this.editMode) Storage.updateCommand(this.editIndex, CommandData)
+        else Storage.addNewCommand(CommandData)
+
+        this.reset()
 
         return {
             show: true,
@@ -184,6 +199,8 @@ export default class ButtonEdit extends Vue {
     // 确认是否放弃编辑
     @Emit('on-finish')
     cancel(): SidebarEmitEvent {
+        this.reset()
+
         return {
             show: false
         }
