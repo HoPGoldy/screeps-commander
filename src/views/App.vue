@@ -34,10 +34,6 @@ v-app
     //- 左侧列表按钮的弹出框
     v-dialog(v-model='showSidebar' eager :persistent="sidebarPersistent")
         component(:is="activeSidebar" @on-finish="onSidebarFinish")
-
-    //- 消息弹窗
-    v-snackbar(v-model="showMessage" :color="messageColor") {{messageText}}
-        v-btn(text @click="showMessage = false") 关闭
 </template>
 
 <script lang="ts">
@@ -69,11 +65,6 @@ export default class App extends Vue {
     // 当前要展示的侧边栏组件名称
     activeSidebar = 'save-config'
 
-    // 弹出框的基本信息
-    showMessage = false
-    messageColor = 'success'
-    messageText = ''
-
     /**
      * 回调 - 侧边栏按钮被点击
      *
@@ -95,14 +86,10 @@ export default class App extends Vue {
 
         if (!e.show) return
 
-        this.message(e.color || 'success', e.content || '设置成功')
-    }
-
-    // 消息弹窗的封装
-    message(color: string, text: string) {
-        this.messageColor = color
-        this.messageText = text
-        this.showMessage = true
+        // this.message(e.color || 'success', e.content || '设置成功')
+        this.$toast(e.content || '设置成功', {
+            color: e.color
+        })
     }
 
     mounted() {

@@ -8898,6 +8898,11 @@ vuetify-loader@^1.3.0:
   dependencies:
     loader-utils "^1.2.0"
 
+vuetify-toast-snackbar@^0.6.1:
+  version "0.6.1"
+  resolved "https://registry.npm.taobao.org/vuetify-toast-snackbar/download/vuetify-toast-snackbar-0.6.1.tgz#a90d93c5b1aae3411d7d297f5ee00934fa6952dc"
+  integrity sha1-qQ2TxbGq40EdfSl/XuAJNPppUtw=
+
 vuetify@^2.2.11:
   version "2.2.14"
   resolved "https://registry.npm.taobao.org/vuetify/download/vuetify-2.2.14.tgz#d846e81812d90b1c7c0684a1eab8bcc9ca0d5ab2"

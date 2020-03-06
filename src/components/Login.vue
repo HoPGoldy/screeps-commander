@@ -19,10 +19,6 @@ v-overlay(:value='show')
                 | 本应用不会记录您的任何身份信息，所以在退出应用后将需要重新登录。
 
             v-btn(color='primary' block depressed @click="login" :loading="loading") 登陆
-
-    //- 消息弹窗
-    v-snackbar(v-model="showMessage" :color="messageColor") {{messageText}}
-        v-btn(text @click="showMessage = false") 关闭
 </template>
 
 <script lang="ts">
@@ -49,28 +45,24 @@ export default class Login extends Mixins(ScreepsApi) {
     // 确认按钮是否载入中
     loading = false
 
-    // 弹出框的基本信息
-    showMessage = false
-    messageColor = 'success'
-    messageText = ''
-
     /**
      * 登陆验证
      * 会确认用户的登陆信息是否正确
      */
     login() {
+        // this.$toast.error('test')
         if (this.email === '' || this.password === '' || this.loading) return
 
         // 设置为登陆中
         this.loading = true
-        this.message('info', '正在向 Screeps 服务器验证身份...')
+        this.$toast.info('正在向 Screeps 服务器验证身份...')
 
         // 发起请求
         this.getSessionToken(this.email, this.password).then(token => {
             this.loginSuccess(token)
         }).catch(() => {
             this.loading = false
-            this.message('error', '验证失败，请验证用户名密码是否正确')
+            this.$toast.error('验证失败，请验证用户名密码是否正确')
         })
     }
 
@@ -83,13 +75,6 @@ export default class Login extends Mixins(ScreepsApi) {
     @Emit('on-success')
     loginSuccess(sessionToken: string): string {
         return sessionToken
-    }
-
-    // 消息弹窗的封装
-    message(color: string, text: string) {
-        this.messageColor = color
-        this.messageText = text
-        this.showMessage = true
     }
 }
 </script>

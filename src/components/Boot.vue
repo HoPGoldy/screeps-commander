@@ -44,10 +44,6 @@ v-overlay(:value='show')
             v-spacer
             v-btn(color='primary' depressed @click="next" :loading="confirmBtnLoading")
                 | 确认
-
-    //- 消息弹窗
-    v-snackbar(v-model="showMessage" :color="messageColor") {{messageText}}
-        v-btn(text @click="showMessage = false") 关闭
 </template>
 
 <script lang="ts">
@@ -97,11 +93,6 @@ export default class Boot extends Mixins(ScreepsApi) {
     // 确认按钮是否载入中
     confirmBtnLoading = false
 
-    // 弹出框的基本信息
-    showMessage = false
-    messageColor = 'success'
-    messageText = ''
-
     // 设置每个阶段的标题
     get currentTitle () {
         switch (this.step) {
@@ -141,25 +132,18 @@ export default class Boot extends Mixins(ScreepsApi) {
 
         // 设置页面状态
         this.confirmBtnLoading = true
-        this.message('info', '正在向 Screeps 服务器验证身份...')
+        this.$toast.info('正在向 Screeps 服务器验证身份...')
 
         // 发起请求
         this.getSessionToken(this.email, this.password).then(token => {
             this.sessionToken = token
             this.step++
-            this.message('success', '验证成功')
+            this.$toast.success('验证成功')
             this.confirmBtnLoading = false
         }).catch(() => {
             this.confirmBtnLoading = false
-            this.message('error', '验证失败，请验证用户名密码是否正确')
+            this.$toast.error('验证失败，请验证用户名密码是否正确')
         })
-    }
-
-    // 消息弹窗的封装
-    message(color: string, text: string) {
-        this.messageColor = color
-        this.messageText = text
-        this.showMessage = true
     }
 }
 </script>

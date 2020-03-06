@@ -45,7 +45,7 @@ export default class ShardSetter extends Vue {
     finish(): SidebarEmitEvent {
         return {
             show: true,
-            content: `已将控制台输出重定向到 ${this.shard}`,
+            content: `已将控制台输入重定向到 ${this.shard}`,
             color: 'success'
         }
     }
