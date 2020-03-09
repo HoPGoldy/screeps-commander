@@ -15,6 +15,10 @@ type ServerList = {
 interface ConsoleMessage {
     // 消息正文
     content: string[]
+    // 该消息的来源/目标 shard
+    shard?: string
+    // 该消息的发送/接收时间
+    date: string
     // 消息前的图标
     icon: string
     // 是否加载中

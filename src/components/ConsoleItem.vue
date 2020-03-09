@@ -4,7 +4,7 @@
         v-list-item-icon.my-3.mr-4
             v-btn(icon small :loading="loading" @click="copyContent")
                 v-icon(:color="iconColor") {{icon}}
-        v-list-item-content
+        v-list-item-content(@click="onContentClick")
             .body-2(ref="content")
                 .my-2(v-for="_ in content")
     v-divider
@@ -55,6 +55,9 @@ export default class ConsoleItem extends Vue {
             contentBox.children[i].innerHTML = newData[i]
         }
     }
+
+    @Emit('on-item-click')
+    onContentClick() { }
 
     // 当图标被点击时会返回该行的数据
     @Emit('on-icon-click')

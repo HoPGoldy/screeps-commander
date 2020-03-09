@@ -12,8 +12,8 @@
 .console-container
     v-list(dense)
         v-list-item-group(color='primary')
-            .item(v-for='(item, i) in messageList', :key='i')
-                console-item(:content="item.content" :icon="item.icon" :loading="item.loading" @on-icon-click="pasteMessage")
+            .item(v-for='item, index in messageList', :key='index')
+                console-item(:content="item.content" :icon="item.icon" :loading="item.loading" @on-icon-click="pasteMessage" @on-item-click="onItemClick(item)")
         .fill-block(v-intersect="onIntersect" ref="itemList")
 
         v-text-field.input-box.ma-4.mr-8(v-model="inputCommand" @keyup.enter="onCommandSend" rounded label="键入命令" solo hide-details clearable)
@@ -102,19 +102,21 @@ export default class Console extends Mixins(ScreepsApi) {
     sendCommand(command: string, shard: string) {
         if (!command || command.length <= 0) return
 
-        const message = this.addNewMessage([command], 'mdi-arrow-top-left-thick')
+        const message = this.addNewMessage([command], 'mdi-arrow-top-left-thick', true, shard)
+
+        // 发送命令
         this.sendConsoleExpression(command, shard).then(resp => {
             console.log('命令发送完成', resp)
             message.loading = false
 
             if (resp.data.error) {
                 message.icon = 'mdi-alert-circle'
-                this.addNewMessage(['发送失败: ' + resp.data.error], 'mdi-alert-circle', false)
+                this.addNewMessage(['发送失败: ' + resp.data.error], 'mdi-alert-circle', false, shard)
             }
         }).catch(error => {
             message.loading = false
             message.icon = 'mdi-alert-circle'
-            this.addNewMessage(['啊哦，命令发送失败，请尝试刷新网页并重写登陆', error], 'mdi-alert-circle', false)
+            this.addNewMessage(['啊哦，命令发送失败，请尝试刷新网页并重写登陆', error], 'mdi-alert-circle', false, shard)
         })
 
         // 显示该信息
@@ -166,7 +168,7 @@ export default class Console extends Mixins(ScreepsApi) {
 
             // 先看一下是不是错误信息
             if (data.error) {
-                this.addNewMessage(data.error.split('\n'), 'mdi-alert-circle', false)
+                this.addNewMessage(data.error.split('\n'), 'mdi-alert-circle', false, data.shard)
             }
             else {
                 if (data.messages.log.length > 0) {
@@ -178,7 +180,7 @@ export default class Console extends Mixins(ScreepsApi) {
                 else return
 
                 // 显示消息
-                this.addNewMessage(logs, 'mdi-arrow-bottom-right-thick', false)
+                this.addNewMessage(logs, 'mdi-arrow-bottom-right-thick', false, data.shard)
             }
 
             // 只有当能看到页面底部时才会自动滚动
@@ -197,8 +199,16 @@ export default class Console extends Mixins(ScreepsApi) {
      * @param icon 左侧显示的标签
      * @return 添加好的消息对象
      */
-    addNewMessage(content: string[], icon: string, loading = true): ConsoleMessage {
-        const message: ConsoleMessage = { content, icon, loading }
+    addNewMessage(content: string[], icon: string, loading = true, shard = ''): ConsoleMessage {
+        const date = new Date()
+
+        const message: ConsoleMessage = {
+            content,
+            icon,
+            loading,
+            shard,
+            date: `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+        }
         this.messageList.push(message)
         return message
     }
@@ -220,6 +230,19 @@ export default class Console extends Mixins(ScreepsApi) {
             wsMessage.content = ['Screeps WebSocket 订阅成功!']
 
             this.addNewMessage(['您现在可以正常与控制台进行交互'], 'mdi-wifi', false)
+        })
+    }
+
+    /**
+     * 回调 - 控制台信息被点击
+     * 用于显示该信息的一些元数据
+     *
+     * @param item 该信息的数据
+     */
+    onItemClick(item: ConsoleMessage) {
+        const shardCotent = item.shard ? `所处镜面 ${item.shard} | ` : ''
+        this.$toast.info(`${shardCotent}消息时间 ${item.date}`, {
+            y: 'top'
         })
     }
 
