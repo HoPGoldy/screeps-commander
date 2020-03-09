@@ -8,7 +8,7 @@ v-card
     v-card-text
         //- 按钮基本信息
         v-text-field.mb-4(v-model="commandInfo.title" label='名称' hide-details clearable)
-        v-text-field.mb-4(v-model="commandInfo.shard" label='目标 shard' hide-details clearable)
+        v-text-field.mb-4(v-model="commandInfo.shard" label='目标 shard（置空以使用全局 shard）' hide-details clearable)
         v-textarea.mb-4(v-model="commandInfo.body" label='命令' hide-details auto-grow clearable rows="1")
 
         //- 按钮参数列表

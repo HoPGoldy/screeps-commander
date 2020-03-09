@@ -7,7 +7,7 @@ v-bottom-sheet(v-model='sheetVisiable' @click:outside="close")
     v-list
         .item(v-for="item, index in commandListData" :key="index")
             v-list-item(@click="onCommandClick(item)")
-                v-chip.mr-3(small disabled) {{item.shard}}
+                v-chip.mr-3(small disabled) {{item.shard || '全局'}}
                 span.d-inline-block.text-truncate.text-no-wrap {{item.title}}
             v-divider(v-if="index != commandListData.length - 1")
     parameter-collecter(v-model="collectingParam" :show="parameterCollecterVisiable" @on-close="onParamClose" @on-finish="onParamFinish")
@@ -75,6 +75,9 @@ export default class CommandList extends Vue {
     // 触发回调 - 返回用户点击的命令给父组件
     @Emit('on-select')
     sendCommand(cmd: string): GetCommandEvent {
+        // 如果按钮的 shard 没有配置的话就使用全局配置
+        if (!this.selectShard) this.selectShard = Storage.get().shard
+
         return {
             command: cmd,
             shard: this.selectShard

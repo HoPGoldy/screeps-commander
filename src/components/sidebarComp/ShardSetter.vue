@@ -5,7 +5,7 @@
 <template lang="pug">
 v-card
     v-card-title.title.font-weight-regular.justify-space-between.pb-1
-        span 设置默认 shard
+        span 设置全局 shard
     v-card-text.pt-0
         v-text-field(v-model="shard" label='shard 名称' hide-details)
         .mt-5.caption.grey--text.text--darken-1
