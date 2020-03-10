@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import '@mdi/font/css/materialdesignicons.css'
 import Vuetify, { VSnackbar, VBtn, VIcon } from 'vuetify/lib'
 import VuetifyToast from 'vuetify-toast-snackbar'
 
