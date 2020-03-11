@@ -121,7 +121,16 @@ class Storage extends Vue {
      */
     setShard(shard: string) {
         this.dataBase.shard = shard
+        this.save()
+    }
 
+    /**
+     * 设置玩家的 token
+     *
+     * @param token 要保存的玩家 token
+     */
+    setToken(token: string) {
+        this.dataBase.token = token
         this.save()
     }
 

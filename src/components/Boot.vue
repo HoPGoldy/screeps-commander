@@ -20,14 +20,29 @@ v-overlay(:value='show')
                             .content {{content.text}}
             //- 第二屏
             v-window-item(:value='2')
-                v-card-text.pt-0
-                    v-text-field(v-model="email" label='Screeps 登陆邮箱' hide-details)
-                    v-text-field.mt-2(v-model="password" label='Screeps 登陆密码' @keyup.enter="next" hide-details
-                        :append-icon="passwordVisiable ? 'mdi-eye' : 'mdi-eye-off'" :type="passwordVisiable ? 'text' : 'password'"
-                        @click:append="passwordVisiable = !passwordVisiable"
-                    )
-                    .mt-5.caption.grey--text.text--darken-1
-                        | 本应用不会记录您的任何身份信息，所以在退出应用后将需要重新登录。
+                v-divider
+                //- 登录方式切换 tab
+                v-tabs.mb-4(v-model="loginTab" fixed-tabs)
+                    v-tab token
+                    v-tab 账号密码
+
+                v-tabs-items(v-model='loginTab')
+                    //- token 登录框
+                    v-tab-item(key="token")
+                        v-card-text.pt-0
+                            v-text-field(v-model="token" label='Screeps AuthToken' hide-details)
+                            .mt-5.caption.grey--text.text--darken-1
+                                | token 将会被保存至本地以执行免验证登录。点击 此处 来生成您的 token。
+                    //- 账号密码登录框
+                    v-tab-item(key="account")
+                        v-card-text.pt-0
+                            v-text-field(v-model="email" label='Screeps 登陆邮箱' hide-details)
+                            v-text-field.mt-2(v-model="password" label='Screeps 登陆密码' @keyup.enter="next" hide-details
+                                :append-icon="passwordVisiable ? 'mdi-eye' : 'mdi-eye-off'" :type="passwordVisiable ? 'text' : 'password'"
+                                @click:append="passwordVisiable = !passwordVisiable"
+                            )
+                            .mt-5.caption.grey--text.text--darken-1
+                                | 本应用不会记录您的任何身份信息，所以在退出应用后将需要重新登录。
             //- 第三屏
             v-window-item(:value='3')
                 .pa-2.pt-0.text-center
@@ -73,6 +88,10 @@ export default class Boot extends Mixins(ScreepsApi) {
         }
     ]
 
+    // 当前选择的登录方式标签页
+    // tab 的当前选择页，0 为 token 登录，1 为账号登录，不知道为什么 v-tabs 不支持自定义自定义索引值
+    loginTab: 0 | 1 = 0
+
     // 当前引导所处的页面位置
     step = 1
 
@@ -83,7 +102,8 @@ export default class Boot extends Mixins(ScreepsApi) {
     // 密码是否可见
     passwordVisiable = false
 
-    // 登陆用户名及密码
+    // 登陆token、用户名及密码
+    token = ''
     email = ''
     password = ''
 
@@ -108,10 +128,13 @@ export default class Boot extends Mixins(ScreepsApi) {
      * 在本地新建数据结构并触发完成初始化的回调
      */
     @Emit('on-finish')
-    finishBoot(): string {
+    finishBoot(): LoginSuccessEvent {
         Storage.init()
 
-        return this.sessionToken
+        return {
+            token: this.sessionToken,
+            type: this.loginTab === 0 ? 'token' : 'account'
+        }
     }
 
     /**
@@ -128,7 +151,45 @@ export default class Boot extends Mixins(ScreepsApi) {
      * 会确认用户的登陆信息是否正确
      */
     login() {
-        if (this.email === '' || this.password === '' || this.confirmBtnLoading) return
+        if (this.confirmBtnLoading) return
+
+        if (this.loginTab === 0) this.tokenAuth()
+        else if (this.loginTab === 1) this.accountAuth()
+    }
+
+    /**
+     * 使用 token 进行登录
+     * 该方法会尝试获取玩家的心理来进行验证
+     * 验证成后该方法会自动保存 token 到本地
+     */
+    tokenAuth() {
+        if (!this.token) return
+
+        // 设置页面状态
+        this.confirmBtnLoading = true
+        this.$toast.info('正在向 Screeps 服务器验证身份...')
+
+        this.getPlayerInfo(this.token).then(resp => {
+            // 用 token 登录的话其实用户填写的 token 和验证成功后返回的新的 seesionToken 是一样的
+            Storage.setToken(this.token)
+            this.sessionToken = resp.sessionToken
+
+            this.step++
+            this.$toast.success('验证成功，免登陆验证已启用')
+            this.confirmBtnLoading = false
+        }).catch((e: Error) => {
+            this.confirmBtnLoading = false
+            this.$toast.error(e.message.includes('401') ? '验证失败，请检查 token 是否正确' : '验证失败, 错误信息如下: ' + e.message)
+        })
+    }
+
+    /**
+     * 使用账户密码进行登录
+     * 该方法会用账户密码去获取 sessionToken，获取成功后会将该 token 代替 authToken 返回给控制台
+     * 不会保存账号密码
+     */
+    accountAuth() {
+        if (!this.email || !this.password) return
 
         // 设置页面状态
         this.confirmBtnLoading = true
@@ -140,9 +201,9 @@ export default class Boot extends Mixins(ScreepsApi) {
             this.step++
             this.$toast.success('验证成功')
             this.confirmBtnLoading = false
-        }).catch(() => {
+        }).catch((e: Error) => {
             this.confirmBtnLoading = false
-            this.$toast.error('验证失败，请验证用户名密码是否正确')
+            this.$toast.error(e.message.includes('401') ? '验证失败，请检查用户名密码是否正确' : '验证失败, 错误信息如下: ' + e.message)
         })
     }
 }

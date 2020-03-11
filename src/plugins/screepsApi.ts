@@ -54,14 +54,19 @@ export default class ScreepsApi extends Vue {
      */
     initWebSocket(): Promise<WebSocket> {
         return new Promise((resolve, reject) => {
-            // 开启 screeps 的 ws 需要 3 位的随机数字和 8 位的随机字符
-            const screepsUrl = `wss://screeps.com/socket/${this.getRandStr('number', 3)}/${this.getRandStr('string', 8)}/websocket`
-            console.log('TCL: ScreepsApi -> screepsUrl', screepsUrl)
-            const screepsWebSock = new WebSocket(screepsUrl)
+            try {
+                // 开启 screeps 的 ws 需要 3 位的随机数字和 8 位的随机字符
+                const screepsUrl = `wss://screeps.com/socket/${this.getRandStr('number', 3)}/${this.getRandStr('string', 8)}/websocket`
+                console.log('TCL: ScreepsApi -> screepsUrl', screepsUrl)
+                const screepsWebSock = new WebSocket(screepsUrl)
 
-            // open 成功就返回 ws，失败就 reject
-            screepsWebSock.onopen = () => resolve(screepsWebSock)
-            screepsWebSock.onerror = (e: Event) => reject(e)
+                // open 成功就返回 ws，失败就 reject
+                screepsWebSock.onopen = () => resolve(screepsWebSock)
+                screepsWebSock.onerror = (e: Event) => reject(e)
+            }
+            catch (e) {
+                reject(e)
+            }
         })
     }
 
@@ -81,8 +86,8 @@ export default class ScreepsApi extends Vue {
                     money: resp.data.money,
                     sessionToken: resp.config.headers['X-token']
                 })
-                else reject(resp.status)
-            })
+                else reject(new Error(resp.status.toString()))
+            }).catch(e => reject(e))
         })
     }
 
@@ -152,10 +157,7 @@ export default class ScreepsApi extends Vue {
         return new Promise((resolve, reject) => {
             $post('/api/auth/signin', { email, password }).then(resp => {
                 if (resp.status === 200 && resp.data.ok === 1) resolve(resp.data.token)
-                else {
-                    console.log('123', resp)
-                    reject(resp)
-                }
+                else reject(new Error(resp.status.toString()))
             }).catch(e => reject(e))
         })
     }

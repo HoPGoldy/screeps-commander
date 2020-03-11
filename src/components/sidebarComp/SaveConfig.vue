@@ -5,7 +5,9 @@
 <template lang="pug">
 v-card
     v-card-text.text-center
-        .subtitle-1.pt-5 点击下方按钮导出配置项到剪切板，或直接手动复制。
+        .subtitle-1.pt-5
+            span 点击下方按钮导出配置项到剪切板，或直接手动复制。
+            span.font-weight-bold 该配置项可能会包含您的 token，请不要分享给其他人。
         v-text-field.mb-4(v-model="copyContent" hide-details)
         v-btn(block color="primary" dark
             v-clipboard:copy="copyContent"

@@ -217,7 +217,7 @@ export default class Console extends Mixins(ScreepsApi) {
     /**
      * 回调 - 完成初始化工作
      */
-    onLoginSuccess(sessionToken: string) {
+    onLoginSuccess(e: LoginSuccessEvent) {
         this.bootVisable = false
         this.loginVisable = false
 
@@ -225,12 +225,17 @@ export default class Console extends Mixins(ScreepsApi) {
         const wsMessage = this.addNewMessage(['正在订阅 Screeps WebSocket, 请稍后...'], 'mdi-wifi')
         // 初始化 screeps 所有后端设置
         // 初始完成后设置 ws 的数据接收回调
-        this.initScreepsApi(sessionToken).then(ws => {
+        this.initScreepsApi(e.token).then(ws => {
             ws.onmessage = this.onMessage
             wsMessage.loading = false
             wsMessage.content = ['Screeps WebSocket 订阅成功!']
 
             this.addNewMessage(['您现在可以正常与控制台进行交互'], 'mdi-wifi', false)
+        }).catch(e => {
+            console.log('该死，初始化 ws 出错了!', e)
+            wsMessage.loading = false
+            wsMessage.icon = 'mdi-alert-circle'
+            wsMessage.content = ['Screeps WebSocket 失败, 请刷新重试']
         })
     }
 
@@ -252,7 +257,11 @@ export default class Console extends Mixins(ScreepsApi) {
         if (!Storage.exist) this.bootVisable = true
         else {
             Storage.init()
-            this.loginVisable = true
+
+            const token = Storage.get().token
+            // 没设置 token 的话就拉起登录，否则直接开始初始化 ws
+            if (!token) this.loginVisable = true
+            else this.onLoginSuccess({ token, type: 'token' })
         }
     }
 

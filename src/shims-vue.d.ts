@@ -75,6 +75,8 @@ interface LocalDataBase {
     commands: Command[]
     // 控制台命令默认发送到的 shard
     shard: string
+    // 玩家的 token，在使用账号密码登录时为 undefined
+    token?: string
 }
 
 // 保存下来的命令数据
@@ -109,4 +111,12 @@ interface ParamData {
 interface GetCommandEvent {
     command: string
     shard: string
+}
+
+// 登录成功后触发的回调返回对象
+interface LoginSuccessEvent {
+    // 登录成功获得的 token
+    token: string
+    // 登录方式，token 登录和账户登录
+    type: 'token' | 'account'
 }
