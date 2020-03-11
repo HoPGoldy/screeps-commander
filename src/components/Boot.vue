@@ -32,7 +32,9 @@ v-overlay(:value='show')
                         v-card-text.pt-0
                             v-text-field(v-model="token" label='Screeps AuthToken' hide-details)
                             .mt-5.caption.grey--text.text--darken-1
-                                | token 将会被保存至本地以执行免验证登录。点击 此处 来生成您的 token。
+                                span token 将会被保存至本地以执行免验证登录。点击
+                                a(@click="openPage(tokenCreateUrl)")  此处
+                                span  来生成您的 token。
                     //- 账号密码登录框
                     v-tab-item(key="account")
                         v-card-text.pt-0
@@ -72,6 +74,9 @@ import { Component, Prop, Emit, Mixins } from 'vue-property-decorator'
 
 @Component
 export default class Boot extends Mixins(ScreepsApi) {
+    // 官方生成 token 的地址
+    tokenCreateUrl = 'https://screeps.com/a/#!/account/auth-tokens'
+
     // 介绍信息
     introduceContent = [
         {
@@ -205,6 +210,11 @@ export default class Boot extends Mixins(ScreepsApi) {
             this.confirmBtnLoading = false
             this.$toast.error(e.message.includes('401') ? '验证失败，请检查用户名密码是否正确' : '验证失败, 错误信息如下: ' + e.message)
         })
+    }
+
+    // 打开指定新页面
+    openPage(url: string) {
+        window.open(url)
     }
 }
 </script>
