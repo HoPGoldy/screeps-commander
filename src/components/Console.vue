@@ -221,7 +221,7 @@ export default class Console extends Mixins(ScreepsApi) {
         this.bootVisable = false
         this.loginVisable = false
 
-        this.addNewMessage(['登录成功'], 'mdi-key', false)
+        this.addNewMessage([e.type === 'token' ? '发现 AuthToken，跳过登录验证' : '登录成功'], 'mdi-key', false)
         const wsMessage = this.addNewMessage(['正在订阅 Screeps WebSocket, 请稍后...'], 'mdi-wifi')
         // 初始化 screeps 所有后端设置
         // 初始完成后设置 ws 的数据接收回调
@@ -231,11 +231,13 @@ export default class Console extends Mixins(ScreepsApi) {
             wsMessage.content = ['Screeps WebSocket 订阅成功!']
 
             this.addNewMessage(['您现在可以正常与控制台进行交互'], 'mdi-wifi', false)
-        }).catch(e => {
+        }).catch((e: Error) => {
             console.log('该死，初始化 ws 出错了!', e)
             wsMessage.loading = false
             wsMessage.icon = 'mdi-alert-circle'
             wsMessage.content = ['Screeps WebSocket 失败, 请刷新重试']
+
+            if (e.message.includes('401')) this.addNewMessage(['当前登录信息已过期，请检查 token 或账号密码是否正确'], 'mdi-alert-circle', false)
         })
     }
 

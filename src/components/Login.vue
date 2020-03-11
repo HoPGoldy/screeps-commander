@@ -73,8 +73,11 @@ export default class Login extends Mixins(ScreepsApi) {
      * @param sessionToken 登陆时返回的 token
      */
     @Emit('on-success')
-    loginSuccess(sessionToken: string): string {
-        return sessionToken
+    loginSuccess(sessionToken: string): LoginSuccessEvent {
+        return {
+            token: sessionToken,
+            type: 'account'
+        }
     }
 }
 </script>

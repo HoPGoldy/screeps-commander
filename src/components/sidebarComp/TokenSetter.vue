@@ -28,7 +28,7 @@ export default class TokenSetter extends Vue {
     // 介绍内容
     get introduce() {
         return this.statsConfirm ? '接下来的操作会覆盖你的现存 Token，是否继续？'
-            : '将 AuthToken 粘贴至此处来更新您的配置'
+            : '将 AuthToken 粘贴至此处来更新您的配置，置空来移除 token'
     }
 
     // 导入按钮的显示文本
@@ -43,8 +43,6 @@ export default class TokenSetter extends Vue {
 
     // 导入确认
     confirmImport(): void {
-        if (this.newToken === '') return
-
         if (this.statsConfirm) this.importToken()
         else this.statsConfirm = true
     }
@@ -59,16 +57,16 @@ export default class TokenSetter extends Vue {
         Storage.setToken(this.newToken)
 
         this.statsConfirm = false
-        this.newToken = ''
 
         this.finish()
+        this.newToken = ''
     }
 
     @Emit('on-finish')
     finish(): SidebarEmitEvent {
         return {
             show: true,
-            content: '导入成功, 已启用免登陆',
+            content: this.newToken ? '导入成功, 已启用免登陆' : '移除成功，免登陆已关闭',
             color: 'success'
         }
     }
