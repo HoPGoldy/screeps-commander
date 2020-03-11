@@ -130,6 +130,8 @@ class Storage extends Vue {
      * @param token 要保存的玩家 token
      */
     setToken(token: string) {
+        if (!this.dataBase) this.init()
+
         this.dataBase.token = token
         this.save()
     }
