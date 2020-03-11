@@ -46,8 +46,8 @@ import Storage from '@/plugins/storage'
 
 import Boot from '@/components/Boot.vue'
 import Login from '@/components/Login.vue'
-import ConsoleItem from './ConsoleItem.vue'
-import CommandList from './CommandList.vue'
+import ConsoleItem from '@/components/ConsoleItem.vue'
+import CommandList from '@/components/CommandList.vue'
 
 @Component({
     components: { ConsoleItem, CommandList, Boot, Login }
