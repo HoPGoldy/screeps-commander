@@ -164,7 +164,7 @@ export default class Console extends Mixins(ScreepsApi) {
             // 后面写死的 [1] 是因为第一个元素是用户的 id，第二个元素包含的是控制台的实际输出
             const data: ScreepsConsoleMessage = JSON.parse(dataStr)[1]
             // console.log('results', data.messages.results, 'log', data.messages.log)
-            let logs: string[]
+            const logs: string[] = []
 
             // 先看一下是不是错误信息
             if (data.error) {
@@ -173,11 +173,12 @@ export default class Console extends Mixins(ScreepsApi) {
             else {
                 if (data.messages.log.length > 0) {
                     // 把每一个信息中种的 \n 都拆出来，不然信息加载到 html 中后不会自动换行
-                    logs = data.messages.log.map(log => log.split('\n')).flat()
+                    logs.push(...data.messages.log.map(log => log.split('\n')).flat())
                 }
-                else if (data.messages.results.length > 0) logs = data.messages.results[0].split('\n')
+                if (data.messages.results.length > 0) logs.push(...data.messages.results[0].split('\n'))
+
                 // 由于 screeps ws 每 tick 都会返回一条信息，所以会包含大量的空数据，这里将其剔除不显示
-                else return
+                if (logs.length <= 0) return
 
                 // 显示消息
                 this.addNewMessage(logs, 'mdi-arrow-bottom-right-thick', false, data.shard)
