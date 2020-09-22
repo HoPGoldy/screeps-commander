@@ -65,6 +65,12 @@ export default class Console extends Mixins(ScreepsApi) {
     // screeps 的 ws 实例
     screepsWebSock!: WebSocket
 
+    // socket 是否存活的检查计时器
+    keepSockTimer!: number
+
+    // screeps 的登陆 token，断开时将使用该 token 尝试重新连接
+    screepsToken = ''
+
     // 是否展示初始化引导
     bootVisable = false
     // 是否展示登陆页面
@@ -116,10 +122,8 @@ export default class Console extends Mixins(ScreepsApi) {
         }).catch(error => {
             message.loading = false
             message.icon = 'mdi-alert-circle'
-            this.addNewMessage(['啊哦，命令发送失败，请尝试刷新网页并重写登陆', error], 'mdi-alert-circle', false, shard)
+            this.addNewMessage(['啊哦，命令发送失败，请尝试刷新网页并重新登陆', error], 'mdi-alert-circle', false, shard)
         })
-
-        // 显示该信息
 
         this.scrollToBottom()
     }
@@ -136,6 +140,7 @@ export default class Console extends Mixins(ScreepsApi) {
 
     // 向下滚动至底部
     scrollToBottom() {
+        console.log('Console -> scrollToBottom -> this.$refs.itemList', this.$refs.itemList)
         this.$vuetify.goTo(this.$refs.itemList as HTMLElement, { duration: 1000 })
     }
 
@@ -183,14 +188,14 @@ export default class Console extends Mixins(ScreepsApi) {
                 // 显示消息
                 this.addNewMessage(logs, 'mdi-arrow-bottom-right-thick', false, data.shard)
             }
-
-            // 只有当能看到页面底部时才会自动滚动
-            // 防止出现用户在看上面信息时列表没眼色的自动滚动
-            if (this.fillBlockVisiable) this.scrollToBottom()
         }
         catch (error) {
             console.log('onMessage 数据解析出错', error, e)
         }
+
+        // 只有当能看到页面底部时才会自动滚动
+        // 防止出现用户在看上面信息时列表没眼色的自动滚动
+        if (this.fillBlockVisiable) this.scrollToBottom()
     }
 
     /**
@@ -223,19 +228,35 @@ export default class Console extends Mixins(ScreepsApi) {
 
         this.addNewMessage([e.type === 'token' ? '发现 AuthToken，跳过登录验证' : '登录成功'], 'mdi-key', false)
         const wsMessage = this.addNewMessage(['正在订阅 Screeps WebSocket, 请稍后...'], 'mdi-wifi')
+        // 保存 token 到实例
+        this.screepsToken = e.token
+
+        this.createSocket(e.token, wsMessage)
+    }
+
+    /**
+     * 和 screeps socket 创建连接
+     *
+     * @param token 连接使用的 token
+     * @param message 显示 socket 创建状态的控制台消息，本方法会对其进行更新
+     */
+    createSocket(token: string, message: ConsoleMessage) {
         // 初始化 screeps 所有后端设置
         // 初始完成后设置 ws 的数据接收回调
-        this.initScreepsApi(e.token).then(ws => {
+        this.initScreepsApi(token).then(ws => {
             ws.onmessage = this.onMessage
-            wsMessage.loading = false
-            wsMessage.content = ['Screeps WebSocket 订阅成功!']
+            message.loading = false
+            message.content = ['Screeps WebSocket 订阅成功!']
 
             this.addNewMessage(['您现在可以正常与控制台进行交互'], 'mdi-wifi', false)
+
+            // 定期检查，防止因网络变差而 sock 断开
+            this.keepSockTimer = setInterval(this.checkSockAlive, 1000)
         }).catch((e: Error) => {
             console.log('该死，初始化 ws 出错了!', e)
-            wsMessage.loading = false
-            wsMessage.icon = 'mdi-alert-circle'
-            wsMessage.content = ['Screeps WebSocket 失败, 请刷新重试']
+            message.loading = false
+            message.icon = 'mdi-alert-circle'
+            message.content = ['Screeps WebSocket 订阅失败, 请刷新重试']
 
             if (e.message.includes('401')) this.addNewMessage(['当前登录信息已过期，请检查 token 或账号密码是否正确'], 'mdi-alert-circle', false)
         })
@@ -265,6 +286,29 @@ export default class Console extends Mixins(ScreepsApi) {
             if (!token) this.loginVisable = true
             else this.onLoginSuccess({ token, type: 'token' })
         }
+    }
+
+    /**
+     * 检查 sock 是否存活
+     * 不正常的话会尝试进行重启
+     */
+    checkSockAlive() {
+        // 当前页面在前台并且已经有 socket 了
+        if (!document.hidden && this.screepsWebSock) {
+            const sockState = this.screepsWebSock.readyState
+            if (sockState === 2 || sockState === 3) this.reloadSocket()
+        }
+    }
+
+    /**
+     * 重新加载 socket
+     */
+    reloadSocket() {
+        const wsMessage = this.addNewMessage(['连接已断开，正在重新订阅...'], 'mdi-wifi')
+        this.createSocket(this.screepsToken, wsMessage)
+
+        // 清除计时器，防止发起多次重新加载
+        clearInterval(this.keepSockTimer)
     }
 
     destroyed() {
